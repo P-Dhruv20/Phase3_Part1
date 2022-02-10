@@ -77,11 +77,12 @@
 Program:    Function Program
         | 
 ;
-Function:   FUNCTION IDENT SEMICOLON BEGIN_PARAMS Dec_colon END_PARAMS BEGIN_LOCALS Dec_colon END_LOCALS BEGIN_BODY Statement END_BODY {
+Function:   FUNCTION IDENT {
   std::string func_name = $2;
   std::cout << "func " + func_name << endl;
   add_function_to_symbol_table(func_name);
 }
+SEMICOLON BEGIN_PARAMS Dec_colon END_PARAMS BEGIN_LOCALS Dec_colon END_LOCALS BEGIN_BODY Statement END_BODY
 ;
 Dec_colon:  Declaration SEMICOLON Dec_colon
             | 
@@ -90,8 +91,6 @@ Declaration:    IDENT COLON Array INTEGER {
         std::string value = $1;
         Type t = Integer;
         std:: cout << ". " + value << endl;
-        std::string st = "temp";
-        add_function_to_symbol_table(st);
         add_variable_to_symbol_table(value, t);
 }
 ;
