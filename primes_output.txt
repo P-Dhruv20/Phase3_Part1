@@ -1,0 +1,396 @@
+Identifier -> IDENT main
+Dec_colon -> epsilon
+Identifier -> IDENT n
+Array -> epsilon
+Declaration -> Identifier COLON Array INTEGER
+Identifier -> IDENT a
+Number -> NUMBER 1000
+Array -> ARRAY L_SQUARE_BRACKET Number R_SQUARE_BRACKET OF
+Declaration -> Identifier COLON Array INTEGER
+Identifier -> IDENT i
+Array -> epsilon
+Declaration -> Identifier COLON Array INTEGER
+Identifier -> IDENT j
+Array -> epsilon
+Declaration -> Identifier COLON Array INTEGER
+Identifier -> IDENT x
+Array -> epsilon
+Declaration -> Identifier COLON Array INTEGER
+Identifier -> IDENT sqrt_n
+Array -> epsilon
+Declaration -> Identifier COLON Array INTEGER
+Dec_colon -> epsilon
+Dec_colon -> Declaration SEMICOLON Dec_colon
+Dec_colon -> Declaration SEMICOLON Dec_colon
+Dec_colon -> Declaration SEMICOLON Dec_colon
+Dec_colon -> Declaration SEMICOLON Dec_colon
+Dec_colon -> Declaration SEMICOLON Dec_colon
+Dec_colon -> Declaration SEMICOLON Dec_colon
+Identifier -> IDENT n
+Var -> Identifier
+Identifier -> IDENT x
+Var -> Identifier
+Identifier -> IDENT n
+Var -> Identifier
+Term -> Var
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Add_Op -> epsilon
+Expression -> Multi_Exp Add_Op
+Not -> epsilon
+Identifier -> IDENT x
+Var -> Identifier
+Term -> Var
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Add_Op -> epsilon
+Expression -> Multi_Exp Add_Op
+Comp -> GT
+Identifier -> IDENT n
+Var -> Identifier
+Term -> Var
+Identifier -> IDENT x
+Var -> Identifier
+Term -> Var
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Mult_Op -> DIV Multi_Exp
+Multi_Exp -> Term Mult_Op
+Add_Op -> epsilon
+Expression -> Multi_Exp Add_Op
+Bool_Exp -> Not Expression Comp Expression
+Identifier -> IDENT x
+Var -> Identifier
+Identifier -> IDENT x
+Var -> Identifier
+Term -> Var
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Identifier -> IDENT n
+Var -> Identifier
+Term -> Var
+Identifier -> IDENT x
+Var -> Identifier
+Term -> Var
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Mult_Op -> DIV Multi_Exp
+Multi_Exp -> Term Mult_Op
+Add_Op -> epsilon
+Expression -> Multi_Exp Add_Op
+Add_Op -> ADD Expression
+Expression -> Multi_Exp Add_Op
+Term -> L_PAREN  Expression R_PAREN
+Number -> NUMBER 2
+Term -> Number
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Mult_Op -> DIV Multi_Exp
+Multi_Exp -> Term Mult_Op
+Add_Op -> epsilon
+Expression -> Multi_Exp Add_Op
+Statement1 -> epsilon
+Statement -> Var ASSIGN Expression SEMICOLON Statement1
+Identifier -> IDENT sqrt_n
+Var -> Identifier
+Identifier -> IDENT x
+Var -> Identifier
+Term -> Var
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Add_Op -> epsilon
+Expression -> Multi_Exp Add_Op
+Identifier -> IDENT i
+Var -> Identifier
+Number -> NUMBER 2
+Term -> Number
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Add_Op -> epsilon
+Expression -> Multi_Exp Add_Op
+Not -> epsilon
+Identifier -> IDENT i
+Var -> Identifier
+Term -> Var
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Add_Op -> epsilon
+Expression -> Multi_Exp Add_Op
+Comp -> LTE
+Identifier -> IDENT n
+Var -> Identifier
+Term -> Var
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Add_Op -> epsilon
+Expression -> Multi_Exp Add_Op
+Bool_Exp -> Not Expression Comp Expression
+Identifier -> IDENT a
+Identifier -> IDENT i
+Var -> Identifier
+Term -> Var
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Add_Op -> epsilon
+Expression -> Multi_Exp Add_Op
+Var -> Identifier L_SQUARE_BRACKET Expression R_SQUARE_BRACKET
+Number -> NUMBER 0
+Term -> Number
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Add_Op -> epsilon
+Expression -> Multi_Exp Add_Op
+Identifier -> IDENT i
+Var -> Identifier
+Identifier -> IDENT i
+Var -> Identifier
+Term -> Var
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Number -> NUMBER 1
+Term -> Number
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Add_Op -> epsilon
+Expression -> Multi_Exp Add_Op
+Add_Op -> ADD Expression
+Expression -> Multi_Exp Add_Op
+Statement1 -> epsilon
+Statement -> Var ASSIGN Expression SEMICOLON Statement1
+Statement1 -> Statement
+Statement -> Var ASSIGN Expression SEMICOLON Statement1
+Identifier -> IDENT i
+Var -> Identifier
+Number -> NUMBER 2
+Term -> Number
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Add_Op -> epsilon
+Expression -> Multi_Exp Add_Op
+Not -> epsilon
+Identifier -> IDENT i
+Var -> Identifier
+Term -> Var
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Add_Op -> epsilon
+Expression -> Multi_Exp Add_Op
+Comp -> LTE
+Identifier -> IDENT sqrt_n
+Var -> Identifier
+Term -> Var
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Add_Op -> epsilon
+Expression -> Multi_Exp Add_Op
+Bool_Exp -> Not Expression Comp Expression
+Not -> epsilon
+Identifier -> IDENT a
+Identifier -> IDENT i
+Var -> Identifier
+Term -> Var
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Add_Op -> epsilon
+Expression -> Multi_Exp Add_Op
+Var -> Identifier L_SQUARE_BRACKET Expression R_SQUARE_BRACKET
+Term -> Var
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Add_Op -> epsilon
+Expression -> Multi_Exp Add_Op
+Comp -> EQ
+Number -> NUMBER 0
+Term -> Number
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Add_Op -> epsilon
+Expression -> Multi_Exp Add_Op
+Bool_Exp -> Not Expression Comp Expression
+Identifier -> IDENT j
+Var -> Identifier
+Identifier -> IDENT i
+Var -> Identifier
+Term -> Var
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Identifier -> IDENT i
+Var -> Identifier
+Term -> Var
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Add_Op -> epsilon
+Expression -> Multi_Exp Add_Op
+Add_Op -> ADD Expression
+Expression -> Multi_Exp Add_Op
+Not -> epsilon
+Identifier -> IDENT j
+Var -> Identifier
+Term -> Var
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Add_Op -> epsilon
+Expression -> Multi_Exp Add_Op
+Comp -> LTE
+Identifier -> IDENT n
+Var -> Identifier
+Term -> Var
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Add_Op -> epsilon
+Expression -> Multi_Exp Add_Op
+Bool_Exp -> Not Expression Comp Expression
+Identifier -> IDENT a
+Identifier -> IDENT j
+Var -> Identifier
+Term -> Var
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Add_Op -> epsilon
+Expression -> Multi_Exp Add_Op
+Var -> Identifier L_SQUARE_BRACKET Expression R_SQUARE_BRACKET
+Number -> NUMBER 1
+Term -> Number
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Add_Op -> epsilon
+Expression -> Multi_Exp Add_Op
+Identifier -> IDENT j
+Var -> Identifier
+Identifier -> IDENT j
+Var -> Identifier
+Term -> Var
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Identifier -> IDENT i
+Var -> Identifier
+Term -> Var
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Add_Op -> epsilon
+Expression -> Multi_Exp Add_Op
+Add_Op -> ADD Expression
+Expression -> Multi_Exp Add_Op
+Statement1 -> epsilon
+Statement -> Var ASSIGN Expression SEMICOLON Statement1
+Statement1 -> Statement
+Statement -> Var ASSIGN Expression SEMICOLON Statement1
+Statement1 -> epsilon
+Statement -> WHILE Bool_Exp BEGINLOOP Statement ENDLOOP SEMICOLON Statement1
+Statement1 -> Statement
+Statement -> Var ASSIGN Expression SEMICOLON Statement1
+Else_statement -> epsilon
+Identifier -> IDENT i
+Var -> Identifier
+Identifier -> IDENT i
+Var -> Identifier
+Term -> Var
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Number -> NUMBER 1
+Term -> Number
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Add_Op -> epsilon
+Expression -> Multi_Exp Add_Op
+Add_Op -> ADD Expression
+Expression -> Multi_Exp Add_Op
+Statement1 -> epsilon
+Statement -> Var ASSIGN Expression SEMICOLON Statement1
+Statement1 -> Statement
+Statement -> IF Bool_Exp THEN Statement Else_statement ENDIF SEMICOLON Statement1
+Identifier -> IDENT i
+Var -> Identifier
+Number -> NUMBER 2
+Term -> Number
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Add_Op -> epsilon
+Expression -> Multi_Exp Add_Op
+Not -> epsilon
+Identifier -> IDENT i
+Var -> Identifier
+Term -> Var
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Add_Op -> epsilon
+Expression -> Multi_Exp Add_Op
+Comp -> LTE
+Identifier -> IDENT n
+Var -> Identifier
+Term -> Var
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Add_Op -> epsilon
+Expression -> Multi_Exp Add_Op
+Bool_Exp -> Not Expression Comp Expression
+Not -> epsilon
+Identifier -> IDENT a
+Identifier -> IDENT i
+Var -> Identifier
+Term -> Var
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Add_Op -> epsilon
+Expression -> Multi_Exp Add_Op
+Var -> Identifier L_SQUARE_BRACKET Expression R_SQUARE_BRACKET
+Term -> Var
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Add_Op -> epsilon
+Expression -> Multi_Exp Add_Op
+Comp -> EQ
+Number -> NUMBER 0
+Term -> Number
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Add_Op -> epsilon
+Expression -> Multi_Exp Add_Op
+Bool_Exp -> Not Expression Comp Expression
+Identifier -> IDENT i
+Var -> Identifier
+Statement1 -> epsilon
+Statement -> WRITE Var SEMICOLON Statement1
+Else_statement -> epsilon
+Identifier -> IDENT i
+Var -> Identifier
+Identifier -> IDENT i
+Var -> Identifier
+Term -> Var
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Number -> NUMBER 1
+Term -> Number
+Mult_Op -> epsilon
+Multi_Exp -> Term Mult_Op
+Add_Op -> epsilon
+Expression -> Multi_Exp Add_Op
+Add_Op -> ADD Expression
+Expression -> Multi_Exp Add_Op
+Statement1 -> epsilon
+Statement -> Var ASSIGN Expression SEMICOLON Statement1
+Statement1 -> Statement
+Statement -> IF Bool_Exp THEN Statement Else_statement ENDIF SEMICOLON Statement1
+Statement1 -> epsilon
+Statement -> WHILE Bool_Exp BEGINLOOP Statement ENDLOOP SEMICOLON Statement1
+Statement1 -> Statement
+Statement -> Var ASSIGN Expression SEMICOLON Statement1
+Statement1 -> Statement
+Statement -> WHILE Bool_Exp BEGINLOOP Statement ENDLOOP SEMICOLON Statement1
+Statement1 -> Statement
+Statement -> Var ASSIGN Expression SEMICOLON Statement1
+Statement1 -> Statement
+Statement -> WHILE Bool_Exp BEGINLOOP Statement ENDLOOP SEMICOLON Statement1
+Statement1 -> Statement
+Statement -> Var ASSIGN Expression SEMICOLON Statement1
+Statement1 -> Statement
+Statement -> Var ASSIGN Expression SEMICOLON Statement1
+Statement1 -> Statement
+Statement -> WHILE Bool_Exp BEGINLOOP Statement ENDLOOP SEMICOLON Statement1
+Statement1 -> Statement
+Statement -> Var ASSIGN Expression SEMICOLON Statement1
+Statement1 -> Statement
+Statement -> READ Var SEMICOLON Statement1
+Function -> FUNCTION Identifier SEMICOLON BEGIN_PARAMS Dec_colon END_PARAMS BEGIN_LOCALS Dec_colon END_LOCALS BEGIN_BODY Statement SEMICOLON St_colon END_BODY
+Program -> epsilon
+Program -> Function Program

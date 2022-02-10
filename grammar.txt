@@ -1,0 +1,28 @@
+Program -> Function Program | epsilon
+Function -> FUNCTION Identifier SEMICOLON BEGIN_PARAMS Dec_colon END_PARAMS BEGIN_LOCALS Dec_colon END_LOCALS BEGIN_BODY Statement SEMICOLON St_colon END_BODY
+Dec_colon -> Declaration SEMICOLON Dec_colon | epsilon
+Declaration -> Identifier COLON Array INTEGER
+Array -> ARRAY L_SQUARE_BRACKET Number R_SQUARE_BRACKET OF | epsilon
+Statement -> Var ASSIGN Expression SEMICOLON Statement1
+            | IF Bool_Exp THEN Statement Else_statement ENDIF SEMICOLON Statement1
+            | WHILE Bool_Exp BEGINLOOP Statement ENDLOOP SEMICOLON Statement1
+            | DO BEGINLOOP Statement ENDLOOP WHILE Bool_Exp SEMICOLON Statement1
+            | READ Var SEMICOLON Statement1
+            | WRITE Var SEMICOLON Statement1
+            | CONTINUE SEMICOLON Statement1
+            | BREAK SEMICOLON Statement1
+            | RETURN Expression SEMICOLON Statement1
+Statement1 -> Statement | epsilon
+Else_statement -> ELSE Statement SEMICOLON St_colon | epsilon
+Bool_Exp -> Not Expression Comp Expression
+Not -> NOT | epsilon
+Comp -> EQ | NEQ | LT | GT | LTE | GTE | epsilon
+Expression -> Multi_Exp Add_Op
+Add_Op -> ADD Expression | MINUS Expression | epsilon
+Multi_Exp -> Term Mult_Op
+Mult_Op -> MULT Multi_Exp | DIV Multi_Exp | MOD Multi_Exp | epsilon
+Term -> Var | Number | L_PAREN  Expression R_PAREN | Identifier L_PAREN Term_Exp R_PAREN
+Term_Exp -> Expression | Expression COMMA Term_Exp | epsilon
+Var -> Identifier | Identifier L_SQUARE_BRACKET Expression R_SQUARE_BRACKET
+Identifier -> IDENT 
+Number -> NUMBER
