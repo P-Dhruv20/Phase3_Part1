@@ -2,6 +2,7 @@
 %{
     #include <stdio.h>
     #include <stdlib.h>
+    #include "milFunc.h"
 
     extern int yylex();
     extern int yylineno;
@@ -73,82 +74,90 @@
 %start Program
 
 %% 
-Program:    Function Program {printf("Program -> Function Program\n");}
-        | {printf("Program -> epsilon\n");}
+Program:    Function Program
+        | 
 ;
-Function:   FUNCTION Identifier SEMICOLON BEGIN_PARAMS Dec_colon END_PARAMS BEGIN_LOCALS Dec_colon END_LOCALS BEGIN_BODY Statement END_BODY {printf("Function -> FUNCTION Identifier SEMICOLON BEGIN_PARAMS Dec_colon END_PARAMS BEGIN_LOCALS Dec_colon END_LOCALS BEGIN_BODY Statement SEMICOLON St_colon END_BODY\n");}
+Function:   FUNCTION IDENT SEMICOLON BEGIN_PARAMS Dec_colon END_PARAMS BEGIN_LOCALS Dec_colon END_LOCALS BEGIN_BODY Statement END_BODY {
+  std::string func_name = $2;
+  std::cout << "func " + func_name << endl;
+  add_function_to_symbol_table(func_name);
+}
 ;
-Dec_colon:  Declaration SEMICOLON Dec_colon {printf("Dec_colon -> Declaration SEMICOLON Dec_colon\n");}
-            | {printf("Dec_colon -> epsilon\n");}
+Dec_colon:  Declaration SEMICOLON Dec_colon
+            | 
 ;
-Declaration:    Identifier COLON Array INTEGER {printf("Declaration -> Identifier COLON Array INTEGER\n");}
+Declaration:    IDENT COLON Array INTEGER {
+        std::string value = $1;
+        Type t = Integer;
+        std:: cout << ". " + value << endl;
+        std::string st = "temp";
+        add_function_to_symbol_table(st);
+        add_variable_to_symbol_table(value, t);
+}
 ;
-Array:  ARRAY L_SQUARE_BRACKET Number R_SQUARE_BRACKET OF  {printf("Array -> ARRAY L_SQUARE_BRACKET Number R_SQUARE_BRACKET OF\n");}
-        | {printf("Array -> epsilon\n");}
+Array:  ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF
+        | 
 ;
-Statement:  Var ASSIGN Expression SEMICOLON Statement1 {printf("Statement -> Var ASSIGN Expression SEMICOLON Statement1\n");}
-            | IF Bool_Exp THEN Statement Else_statement ENDIF SEMICOLON Statement1 {printf("Statement -> IF Bool_Exp THEN Statement Else_statement ENDIF SEMICOLON Statement1\n");}
-            | WHILE Bool_Exp BEGINLOOP Statement ENDLOOP SEMICOLON Statement1 {printf("Statement -> WHILE Bool_Exp BEGINLOOP Statement ENDLOOP SEMICOLON Statement1\n");}
-            | DO BEGINLOOP Statement ENDLOOP WHILE Bool_Exp SEMICOLON Statement1 {printf("Statement -> DO BEGINLOOP Statement ENDLOOP WHILE Bool_Exp SEMICOLON Statement1\n");}
-            | READ Var SEMICOLON Statement1 {printf("Statement -> READ Var SEMICOLON Statement1\n");}
-            | WRITE Var SEMICOLON Statement1 {printf("Statement -> WRITE Var SEMICOLON Statement1\n");}
-            | CONTINUE SEMICOLON Statement1 {printf("Statement -> CONTINUE SEMICOLON Statement1\n");}
-            | BREAK SEMICOLON Statement1 {printf("Statement -> BREAK SEMICOLON Statement1\n");}
-            | RETURN Expression SEMICOLON Statement1 {printf("Statement -> RETURN Expression SEMICOLON Statement1\n");}
+Statement:  Var ASSIGN Expression SEMICOLON Statement1 
+            | IF Bool_Exp THEN Statement Else_statement ENDIF SEMICOLON Statement1
+            | WHILE Bool_Exp BEGINLOOP Statement ENDLOOP SEMICOLON Statement1
+            | DO BEGINLOOP Statement ENDLOOP WHILE Bool_Exp SEMICOLON Statement1
+            | READ Var SEMICOLON Statement1
+            | WRITE Var SEMICOLON Statement1
+            | CONTINUE SEMICOLON Statement1
+            | BREAK SEMICOLON Statement1
+            | RETURN Expression SEMICOLON Statement1
 ;
-Statement1 : Statement {printf("Statement1 -> Statement\n");}
-        | {printf("Statement1 -> epsilon\n");}
+Statement1 : Statement
+        |
 ;
-Else_statement: ELSE Statement {printf("Else_statement -> ELSE Statement SEMICOLON St_colon\n");}
-                | {printf("Else_statement -> epsilon\n");}
+Else_statement: ELSE Statement
+                | 
 ;
-Bool_Exp:   Not Expression Comp Expression {printf("Bool_Exp -> Not Expression Comp Expression\n");}
+Bool_Exp:   Not Expression Comp Expression
 ;
-Not: NOT {printf("Not -> NOT\n");}
-    | {printf("Not -> epsilon\n");}
+Not: NOT
+    | 
 ;
-Comp:   EQ {printf("Comp -> EQ\n");}
-        | NEQ {printf("Comp -> NEQ\n");}
-        | LT   {printf("Comp -> LT\n");}
-        | GT    {printf("Comp -> GT\n");}
-        | LTE   {printf("Comp -> LTE\n");}
-        | GTE   {printf("Comp -> GTE\n");}
-        |   {printf("Comp -> epsilon\n");}
+Comp:   EQ
+        | NEQ
+        | LT
+        | GT
+        | LTE
+        | GTE
+        |
 ;
-Expression: Multi_Exp Add_Op {printf("Expression -> Multi_Exp Add_Op\n");}
+Expression: Multi_Exp Add_Op
 ;
-Add_Op: ADD Expression {printf("Add_Op -> ADD Expression\n");}
-        | MINUS Expression {printf("Add_Op -> MINUS Expression\n");}
-        | {printf("Add_Op -> epsilon\n");}
+Add_Op: ADD Expression
+        | MINUS Expression
+        | 
 ;
-Multi_Exp:  Term Mult_Op {printf("Multi_Exp -> Term Mult_Op\n");}
+Multi_Exp:  Term Mult_Op 
 ;
-Mult_Op:    MULT Multi_Exp {printf("Mult_Op -> MULT Multi_Exp\n");}
-            | DIV Multi_Exp {printf("Mult_Op -> DIV Multi_Exp\n");}
-            | MOD Multi_Exp {printf("Mult_Op -> MOD Multi_Exp\n");}
-            | {printf("Mult_Op -> epsilon\n");}
+Mult_Op:    MULT Multi_Exp
+            | DIV Multi_Exp
+            | MOD Multi_Exp
+            |
 ;
-Term:   Var {printf("Term -> Var\n");}
-        | Number    {printf("Term -> Number\n");}
-        | L_PAREN  Expression R_PAREN {printf("Term -> L_PAREN  Expression R_PAREN\n");}
-        | Identifier L_PAREN Term_Exp R_PAREN {printf("Term -> Identifier L_PAREN Term_Exp R_PAREN\n");}
+Term:   Var
+        | NUMBER
+        | L_PAREN Expression R_PAREN 
+        | IDENT L_PAREN Term_Exp R_PAREN
 ;
-Term_Exp:   Expression {printf("Term_Exp -> Expression\n");}
-            | Expression COMMA Term_Exp {printf("Term_Exp -> Expression COMMA Term_Exp\n");}
-            |   {printf("Term_Exp -> epsilon\n");}
+Term_Exp:   Expression
+            | Expression COMMA Term_Exp 
+            | 
 ;
-Var:    Identifier {printf("Var -> Identifier\n");}
-        | Identifier L_SQUARE_BRACKET Expression R_SQUARE_BRACKET {printf("Var -> Identifier L_SQUARE_BRACKET Expression R_SQUARE_BRACKET\n");}
-;
-Identifier: IDENT {printf("Identifier -> IDENT %s\n", $1);}
-;
-Number: NUMBER {printf("Number -> NUMBER %d\n", $1);}
+Var:    IDENT
+        | IDENT L_SQUARE_BRACKET Expression R_SQUARE_BRACKET
 ;
 %% 
 
 int main(int argc, char **argv) {
    yyin = stdin;
    yyparse();
+   print_symbol_table();
    return 0;
 }
 

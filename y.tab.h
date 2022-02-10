@@ -100,10 +100,10 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 14 "miniL.y" /* yacc.c:1909  */
+#line 15 "miniL.y" /* yacc.c:1909  */
 
         int ival;
-#line 17 "miniL.y" /* yacc.c:1909  */
+#line 18 "miniL.y" /* yacc.c:1909  */
 
         char *stval;
 
