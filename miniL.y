@@ -17,12 +17,13 @@
 }
 %union{
         char *stval;
+        struct Node* assign_node;
 }
 
 %error-verbose
 %locations
 
-%token <ival> NUMBER
+%token <stval> NUMBER
 %token <stval> IDENT
 %token FUNCTION
 %token BEGIN_PARAMS
@@ -71,6 +72,12 @@
 %token ASSIGN
 %expect 1
 
+%type <stval> Var
+%type <stval> Term
+%type <stval> Mult_Op
+%type <stval> Add_Op
+%type <stval> Mult_Expr
+%type <assign_node> Expression
 %start Program
 
 %% 
@@ -83,6 +90,9 @@ Function:   FUNCTION IDENT {
   add_function_to_symbol_table(func_name);
 }
 SEMICOLON BEGIN_PARAMS Dec_colon END_PARAMS BEGIN_LOCALS Dec_colon END_LOCALS BEGIN_BODY Statement END_BODY
+{
+  std::cout << "endfunc" << endl;
+}
 ;
 Dec_colon:  Declaration SEMICOLON Dec_colon
             | 
@@ -97,15 +107,19 @@ Declaration:    IDENT COLON Array INTEGER {
 Array:  ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF
         | 
 ;
-Statement:  Var ASSIGN Expression SEMICOLON Statement1 
+Statement:  Var {operands.push_back($1);
+                }
+                ASSIGN Expression SEMICOLON 
+                {organize_into_nodes();}
+                Statement1 
             | IF Bool_Exp THEN Statement Else_statement ENDIF SEMICOLON Statement1
             | WHILE Bool_Exp BEGINLOOP Statement ENDLOOP SEMICOLON Statement1
             | DO BEGINLOOP Statement ENDLOOP WHILE Bool_Exp SEMICOLON Statement1
-            | READ Var SEMICOLON Statement1
-            | WRITE Var SEMICOLON Statement1
-            | CONTINUE SEMICOLON Statement1
-            | BREAK SEMICOLON Statement1
-            | RETURN Expression SEMICOLON Statement1
+            | READ Var {std::cout << ".< " << $2;} SEMICOLON {std::cout << endl;} Statement1
+            | WRITE Var {std::cout << ".> " << $2;} SEMICOLON {std::cout << endl;} Statement1
+            | CONTINUE SEMICOLON {std::cout << endl;} Statement1
+            | BREAK SEMICOLON {std::cout << endl;} Statement1
+            | RETURN Expression SEMICOLON {std::cout << endl;} Statement1
 ;
 Statement1 : Statement
         |
@@ -126,21 +140,39 @@ Comp:   EQ
         | GTE
         |
 ;
-Expression: Multi_Exp Add_Op
+Expression: Multi_Exp Add_Op 
 ;
-Add_Op: ADD Expression
-        | MINUS Expression
+Add_Op: ADD 
+        { operands.push_back("+");
+        }
+        Expression 
+        | MINUS
+        { operands.push_back("-");
+        }
+        Expression
         | 
 ;
-Multi_Exp:  Term Mult_Op 
+
+Multi_Exp:  Term { operands.push_back($1);
+        }
+        Mult_Op 
 ;
-Mult_Op:    MULT Multi_Exp
-            | DIV Multi_Exp
-            | MOD Multi_Exp
-            |
+Mult_Op:    MULT 
+        { operands.push_back("*");
+        }
+        Multi_Exp
+            | DIV
+            { operands.push_back("/");
+        }
+        Multi_Exp
+            | MOD
+            { operands.push_back("%");
+        }
+        Multi_Exp
+            | 
 ;
-Term:   Var
-        | NUMBER
+Term:   Var {$$ = $1;}
+        | NUMBER {$$ = $1;}
         | L_PAREN Expression R_PAREN 
         | IDENT L_PAREN Term_Exp R_PAREN
 ;
@@ -148,7 +180,7 @@ Term_Exp:   Expression
             | Expression COMMA Term_Exp 
             | 
 ;
-Var:    IDENT
+Var:    IDENT {$$ = $1;}
         | IDENT L_SQUARE_BRACKET Expression R_SQUARE_BRACKET
 ;
 %% 
@@ -156,7 +188,6 @@ Var:    IDENT
 int main(int argc, char **argv) {
    yyin = stdin;
    yyparse();
-   print_symbol_table();
    return 0;
 }
 

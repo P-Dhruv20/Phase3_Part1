@@ -638,7 +638,6 @@ int yy_flex_debug = 0;
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
 #line 1 "miniL.lex"
-/* cs152-miniL phase1 */
 #line 6 "miniL.lex"
    /* write your C code here for definitions of variables and including headers */
    #include <stdio.h>
@@ -649,7 +648,7 @@ char *yytext;
    int rows = 1;
    int columns = 0;
 /* some common rules */
-#line 653 "lex.yy.c"
+#line 652 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -834,7 +833,7 @@ YY_DECL
 #line 24 "miniL.lex"
 
    /* specific lexer rules in regex */
-#line 838 "lex.yy.c"
+#line 837 "lex.yy.c"
 
 	if ( !(yy_init) )
 		{
@@ -1206,7 +1205,7 @@ case 50:
 YY_RULE_SETUP
 #line 105 "miniL.lex"
 {columns += strlen(yytext);
-                   yylval.ival = atoi(yytext);
+                   yylval.stval = strdup(yytext);
                    return NUMBER;}
 	YY_BREAK
 case 51:
@@ -1237,7 +1236,7 @@ YY_RULE_SETUP
 #line 114 "miniL.lex"
 ECHO;
 	YY_BREAK
-#line 1241 "lex.yy.c"
+#line 1240 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 

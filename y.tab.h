@@ -106,8 +106,9 @@ union YYSTYPE
 #line 18 "miniL.y" /* yacc.c:1909  */
 
         char *stval;
+        struct Node* assign_node;
 
-#line 111 "y.tab.h" /* yacc.c:1909  */
+#line 112 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

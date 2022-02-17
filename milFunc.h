@@ -13,7 +13,6 @@ char *identToken;
 int numberToken;
 int  count_names = 0;
 
-
 enum Type { Integer, Array };
 struct Symbol {
   std::string name;
@@ -24,8 +23,63 @@ struct Function {
   std::vector<Symbol> declarations;
 };
 
-std::vector <Function> symbol_table;
+enum Assign {Normal, Operational};
+struct Node {
+  std::vector<std::string> operators;
+  std::vector<std::string> src;
+  std::string dst;
+  Assign type;
+};
 
+std::vector <Function> symbol_table;
+std::vector <Node> op;
+std::vector <std::string> operands;
+
+int k = 0;
+
+void organize_into_nodes() {
+  Node *node = new Node;
+
+  for (int i = 1; i < operands.size(); i+=2) {
+    node->src.push_back(operands[i]);
+    if (i < (operands.size() - 1)) {
+      node->operators.push_back(operands[i+1]);
+    }
+  }
+
+  node->dst = operands[0];
+
+  if (operands.size() == 2) {
+    node->type = Normal;
+  }
+  else {
+    node->type = Operational;
+  }
+  
+  if (node->type == Normal) {
+    std::cout << "= " << node->dst << ", " << node->src[0] << endl;
+  }
+  else {
+    int j = 0;
+
+    for (int i = 0; i < node->operators.size(); i++, j+=2, k++) {
+      std::string temp = "temp_" + to_string(k);
+      std::cout << ". " << temp << endl;
+
+      std::cout <<  node->operators[i] << " ";
+      std::cout << temp << ", ";
+      std::cout << node->src[j] << ", ";
+      std::cout << node->src[j+1] << endl;
+
+      node->src.erase(node->src.begin());
+      node->src[0] = temp;
+    }
+
+    std::cout << "= " << node->dst << ", " << node->src[0] << endl;
+  }
+
+  operands.clear();
+}
 
 Function *get_function() {
   int last;

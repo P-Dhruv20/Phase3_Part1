@@ -1,4 +1,4 @@
-   /* cs152-miniL phase1 */
+NUM   /* cs152-miniL phase1 */
 %option noyywrap
 %option yylineno
 
@@ -103,7 +103,7 @@ INVALID_UNDER     [a-zA-Z]["_"]*[a-zA-Z0-9]*["_"]+
 {INVALID}    {printf("Error at line %d, column %d, identifier \"%s\" must begin with a letter\n", rows, columns, yytext);
                     return 0;}
 {DIGIT}+          {columns += strlen(yytext);
-                   yylval.ival = atoi(yytext);
+                   yylval.stval = strdup(yytext);
                    return NUMBER;}
 " "               {columns += strlen(yytext);}
 "\t"              {columns += strlen(yytext);}
