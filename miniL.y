@@ -65,10 +65,10 @@
 %token SEMICOLON
 %token COLON
 %token COMMA
-%token L_PAREN
-%token R_PAREN
-%token L_SQUARE_BRACKET
-%token R_SQUARE_BRACKET
+%token <stval> L_PAREN
+%token <stval> R_PAREN
+%left L_SQUARE_BRACKET
+%left R_SQUARE_BRACKET
 %token ASSIGN
 %expect 1
 
@@ -77,7 +77,7 @@
 %type <stval> Mult_Op
 %type <stval> Add_Op
 %type <stval> Mult_Expr
-%type <assign_node> Expression
+%type <stval> Expression
 %start Program
 
 %% 
@@ -110,7 +110,7 @@ Array:  ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF
 Statement:  Var {operands.push_back($1);
                 }
                 ASSIGN Expression SEMICOLON 
-                {organize_into_nodes();}
+                {if (operands.size() > 0) {organize_into_nodes();} }
                 Statement1 
             | IF Bool_Exp THEN Statement Else_statement ENDIF SEMICOLON Statement1
             | WHILE Bool_Exp BEGINLOOP Statement ENDLOOP SEMICOLON Statement1
@@ -153,8 +153,7 @@ Add_Op: ADD
         | 
 ;
 
-Multi_Exp:  Term { operands.push_back($1);
-        }
+Multi_Exp:  Term 
         Mult_Op 
 ;
 Mult_Op:    MULT 
@@ -171,9 +170,9 @@ Mult_Op:    MULT
         Multi_Exp
             | 
 ;
-Term:   Var {$$ = $1;}
-        | NUMBER {$$ = $1;}
-        | L_PAREN Expression R_PAREN 
+Term:   Var {operands.push_back($1);}
+        | NUMBER  {operands.push_back($1);}
+        | L_PAREN {operands.push_back("(");} Expression {organize_into_nodes();} R_PAREN 
         | IDENT L_PAREN Term_Exp R_PAREN
 ;
 Term_Exp:   Expression

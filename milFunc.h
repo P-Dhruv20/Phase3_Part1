@@ -37,47 +37,88 @@ std::vector <std::string> operands;
 
 int k = 0;
 
+int parenthesis() {
+  for (int i = 1; i < operands.size(); i++) {
+    if (operands[i] == "(") {
+      return i;
+    }
+  }
+  return -1;
+}
+
 void organize_into_nodes() {
   Node *node = new Node;
+  Node *node_paren = new Node;
+  int index = parenthesis();
 
-  for (int i = 1; i < operands.size(); i+=2) {
-    node->src.push_back(operands[i]);
-    if (i < (operands.size() - 1)) {
-      node->operators.push_back(operands[i+1]);
-    }
-  }
+  if (index > -1) {
+    node_paren->dst = operands[0];
+    node_paren->src.push_back(operands[index+1]);
+    node_paren->src.push_back(operands[index+3]);
+    node_paren->src.push_back(operands[index-2]);
+    node_paren->operators.push_back(operands[index+2]);
+    node_paren->operators.push_back(operands[index-1]);
 
-  node->dst = operands[0];
+    std::string temp_1 = "temp_" + to_string(k);
+    k++;
+    std::cout << ". " << temp_1 << endl;
+    std::cout <<  node_paren->operators[0] << " ";
+    std::cout << temp_1 << ", ";
+    std::cout << node_paren->src[0] << ", ";
+    std::cout << node_paren->src[1] << endl;
 
-  if (operands.size() == 2) {
-    node->type = Normal;
+    std::string temp_2 = "temp_" + to_string(k);
+    k++;
+    std::cout << ". " << temp_2 << endl;
+    std::cout <<  node_paren->operators[1] << " ";
+    std::cout << temp_2 << ", ";
+    std::cout << temp_1 << ", ";
+    std::cout << node_paren->src[2] << endl;
+
+    node_paren->src.erase(node_paren->src.begin());
+    node_paren->operators.erase(node_paren->operators.begin());
+    std::cout << "= " << node_paren->dst << ", " << temp_2 << endl;
   }
   else {
-    node->type = Operational;
-  }
-  
-  if (node->type == Normal) {
-    std::cout << "= " << node->dst << ", " << node->src[0] << endl;
-  }
-  else {
-    int j = 0;
+    for (int i = 1; i < operands.size(); i+=2) {
+      node->src.push_back(operands[i]);
 
-    for (int i = 0; i < node->operators.size(); i++, j+=2, k++) {
-      std::string temp = "temp_" + to_string(k);
-      std::cout << ". " << temp << endl;
-
-      std::cout <<  node->operators[i] << " ";
-      std::cout << temp << ", ";
-      std::cout << node->src[j] << ", ";
-      std::cout << node->src[j+1] << endl;
-
-      node->src.erase(node->src.begin());
-      node->src[0] = temp;
+      if (i < (operands.size() - 1)) {
+        node->operators.push_back(operands[i+1]);
+      }
     }
+    
+    node->dst = operands[0];
 
-    std::cout << "= " << node->dst << ", " << node->src[0] << endl;
+    if (operands.size() == 2) {
+      node->type = Normal;
+    }
+    else {
+      node->type = Operational;
+    }
+    
+    if (node->type == Normal) {
+      std::cout << "= " << node->dst << ", " << node->src[0] << endl;
+      return;
+    }
+    else {
+
+      for (int i = 0; i < node->operators.size(); i++, k++) {
+        std::string temp = "temp_" + to_string(k);
+        std::cout << ". " << temp << endl;
+
+        std::cout <<  node->operators[i] << " ";
+        std::cout << temp << ", ";
+        std::cout << node->src[0] << ", ";
+        std::cout << node->src[1] << endl;
+
+        node->src.erase(node->src.begin());
+        node->src[0] = temp;
+      }
+
+      std::cout << "= " << node->dst << ", " << node->src[0] << endl;
+    }
   }
-
   operands.clear();
 }
 
