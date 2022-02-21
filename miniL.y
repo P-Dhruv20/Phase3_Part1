@@ -108,7 +108,7 @@ Declaration:    IDENT COLON Array INTEGER {
 Array:  ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF
         | 
 ;
-Statement:  Var {operands.push_back($1);
+Statement:  Var {operands.push_back($1); args.push_back($1);
                 }
                 ASSIGN Expression SEMICOLON {if (operands.size() > 0) {organize_into_nodes();} } Statement1 
             | IF Bool_Exp THEN Statement Else_statement ENDIF SEMICOLON Statement1
@@ -142,11 +142,11 @@ Comp:   EQ
 Expression: Multi_Exp Add_Op 
 ;
 Add_Op: ADD 
-        { operands.push_back("+");
+        { operands.push_back("+"); args.push_back("+");
         }
         Expression 
         | MINUS
-        { operands.push_back("-");
+        { operands.push_back("-"); args.push_back("-");
         }
         Expression
         | 
@@ -156,26 +156,26 @@ Multi_Exp:  Term
         Mult_Op 
 ;
 Mult_Op:    MULT 
-        { operands.push_back("*");
+        { operands.push_back("*"); args.push_back("*");
         }
         Multi_Exp
             | DIV
-            { operands.push_back("/");
+            { operands.push_back("/"); args.push_back("/");
         }
         Multi_Exp
             | MOD
-            { operands.push_back("%");
+            { operands.push_back("%"); args.push_back("%");
         }
         Multi_Exp
             | 
 ;
-Term:   Var {operands.push_back($1);}
-        | NUMBER  {operands.push_back($1);}
+Term:   Var {operands.push_back($1); args.push_back($1);}
+        | NUMBER  {operands.push_back($1); args.push_back($1);}
         | L_PAREN {operands.push_back("(");} Expression {organize_into_nodes();} R_PAREN 
-        | IDENT L_PAREN Term_Exp R_PAREN
+        | IDENT L_PAREN Term_Exp R_PAREN {args.push_back($1); print_args();}
 ;
 Term_Exp:   Expression
-            | Expression COMMA Term_Exp 
+            | Expression COMMA {args.push_back(",");} Term_Exp 
             | 
 ;
 Var:    IDENT {$$ = $1;}

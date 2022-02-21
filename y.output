@@ -124,11 +124,14 @@ Grammar
    63     | IDENT L_PAREN Term_Exp R_PAREN
 
    64 Term_Exp: Expression
-   65         | Expression COMMA Term_Exp
-   66         | %empty
 
-   67 Var: IDENT
-   68    | IDENT L_SQUARE_BRACKET Expression R_SQUARE_BRACKET
+   65 $@20: %empty
+
+   66 Term_Exp: Expression COMMA $@20 Term_Exp
+   67         | %empty
+
+   68 Var: IDENT
+   69    | IDENT L_SQUARE_BRACKET Expression R_SQUARE_BRACKET
 
 
 Terminals, with rules where they appear
@@ -136,7 +139,7 @@ Terminals, with rules where they appear
 $end (0) 0
 error (256)
 NUMBER (258) 10 59
-IDENT (259) 6 9 63 67 68
+IDENT (259) 6 9 63 68 69
 FUNCTION (260) 6
 BEGIN_PARAMS (261) 6
 END_PARAMS (262) 6
@@ -176,11 +179,11 @@ LTE (295) 41
 GTE (296) 42
 SEMICOLON (297) 6 7 14 15 16 17 20 23 25 27 29
 COLON (298) 9
-COMMA (299) 65
+COMMA (299) 66
 L_PAREN (300) 62 63
 R_PAREN (301) 62 63
-L_SQUARE_BRACKET (302) 10 68
-R_SQUARE_BRACKET (303) 10 68
+L_SQUARE_BRACKET (302) 10 69
+R_SQUARE_BRACKET (303) 10 69
 ASSIGN (304) 14
 
 
@@ -235,7 +238,7 @@ Not (72)
 Comp (73)
     on left: 37 38 39 40 41 42 43, on right: 34
 Expression (74)
-    on left: 44, on right: 14 29 34 46 48 62 64 65 68
+    on left: 44, on right: 14 29 34 46 48 62 64 66 69
 Add_Op (75)
     on left: 46 48 49, on right: 44
 $@13 (76)
@@ -259,9 +262,11 @@ $@18 (84)
 $@19 (85)
     on left: 61, on right: 62
 Term_Exp (86)
-    on left: 64 65 66, on right: 63 65
-Var (87)
-    on left: 67 68, on right: 14 20 23 58
+    on left: 64 66 67, on right: 63 66
+$@20 (87)
+    on left: 65, on right: 66
+Var (88)
+    on left: 68 69, on right: 14 20 23 58
 
 
 State 0
@@ -522,12 +527,12 @@ State 29
 
 State 30
 
-   67 Var: IDENT .
-   68    | IDENT . L_SQUARE_BRACKET Expression R_SQUARE_BRACKET
+   68 Var: IDENT .
+   69    | IDENT . L_SQUARE_BRACKET Expression R_SQUARE_BRACKET
 
     L_SQUARE_BRACKET  shift, and go to state 41
 
-    $default  reduce using rule 67 (Var)
+    $default  reduce using rule 68 (Var)
 
 
 State 31
@@ -625,7 +630,7 @@ State 40
 
 State 41
 
-   68 Var: IDENT L_SQUARE_BRACKET . Expression R_SQUARE_BRACKET
+   69 Var: IDENT L_SQUARE_BRACKET . Expression R_SQUARE_BRACKET
 
     NUMBER   shift, and go to state 51
     IDENT    shift, and go to state 52
@@ -736,14 +741,14 @@ State 51
 State 52
 
    63 Term: IDENT . L_PAREN Term_Exp R_PAREN
-   67 Var: IDENT .
-   68    | IDENT . L_SQUARE_BRACKET Expression R_SQUARE_BRACKET
+   68 Var: IDENT .
+   69    | IDENT . L_SQUARE_BRACKET Expression R_SQUARE_BRACKET
 
     L_PAREN           shift, and go to state 69
     L_SQUARE_BRACKET  shift, and go to state 41
 
-    L_PAREN   [reduce using rule 67 (Var)]
-    $default  reduce using rule 67 (Var)
+    L_PAREN   [reduce using rule 68 (Var)]
+    $default  reduce using rule 68 (Var)
 
 
 State 53
@@ -810,7 +815,7 @@ State 59
 
 State 60
 
-   68 Var: IDENT L_SQUARE_BRACKET Expression . R_SQUARE_BRACKET
+   69 Var: IDENT L_SQUARE_BRACKET Expression . R_SQUARE_BRACKET
 
     R_SQUARE_BRACKET  shift, and go to state 80
 
@@ -938,7 +943,7 @@ State 69
     IDENT    shift, and go to state 52
     L_PAREN  shift, and go to state 53
 
-    $default  reduce using rule 66 (Term_Exp)
+    $default  reduce using rule 67 (Term_Exp)
 
     Expression  go to state 96
     Multi_Exp   go to state 55
@@ -1045,9 +1050,9 @@ State 79
 
 State 80
 
-   68 Var: IDENT L_SQUARE_BRACKET Expression R_SQUARE_BRACKET .
+   69 Var: IDENT L_SQUARE_BRACKET Expression R_SQUARE_BRACKET .
 
-    $default  reduce using rule 68 (Var)
+    $default  reduce using rule 69 (Var)
 
 
 State 81
@@ -1173,7 +1178,7 @@ State 95
 State 96
 
    64 Term_Exp: Expression .
-   65         | Expression . COMMA Term_Exp
+   66         | Expression . COMMA $@20 Term_Exp
 
     COMMA  shift, and go to state 113
 
@@ -1386,19 +1391,11 @@ State 112
 
 State 113
 
-   65 Term_Exp: Expression COMMA . Term_Exp
+   66 Term_Exp: Expression COMMA . $@20 Term_Exp
 
-    NUMBER   shift, and go to state 51
-    IDENT    shift, and go to state 52
-    L_PAREN  shift, and go to state 53
+    $default  reduce using rule 65 ($@20)
 
-    $default  reduce using rule 66 (Term_Exp)
-
-    Expression  go to state 96
-    Multi_Exp   go to state 55
-    Term        go to state 56
-    Term_Exp    go to state 129
-    Var         go to state 57
+    $@20  go to state 129
 
 
 State 114
@@ -1524,9 +1521,19 @@ State 128
 
 State 129
 
-   65 Term_Exp: Expression COMMA Term_Exp .
+   66 Term_Exp: Expression COMMA $@20 . Term_Exp
 
-    $default  reduce using rule 65 (Term_Exp)
+    NUMBER   shift, and go to state 51
+    IDENT    shift, and go to state 52
+    L_PAREN  shift, and go to state 53
+
+    $default  reduce using rule 67 (Term_Exp)
+
+    Expression  go to state 96
+    Multi_Exp   go to state 55
+    Term        go to state 56
+    Term_Exp    go to state 135
+    Var         go to state 57
 
 
 State 130
@@ -1553,7 +1560,7 @@ State 131
     $default  reduce using rule 31 (Statement1)
 
     Statement   go to state 91
-    Statement1  go to state 135
+    Statement1  go to state 136
     Var         go to state 40
 
 
@@ -1574,7 +1581,7 @@ State 132
     $default  reduce using rule 31 (Statement1)
 
     Statement   go to state 91
-    Statement1  go to state 136
+    Statement1  go to state 137
     Var         go to state 40
 
 
@@ -1602,25 +1609,32 @@ State 134
     $default  reduce using rule 31 (Statement1)
 
     Statement   go to state 91
-    Statement1  go to state 137
+    Statement1  go to state 138
     Var         go to state 40
 
 
 State 135
+
+   66 Term_Exp: Expression COMMA $@20 Term_Exp .
+
+    $default  reduce using rule 66 (Term_Exp)
+
+
+State 136
 
    14 Statement: Var $@4 ASSIGN Expression SEMICOLON $@5 Statement1 .
 
     $default  reduce using rule 14 (Statement)
 
 
-State 136
+State 137
 
    15 Statement: IF Bool_Exp THEN Statement Else_statement ENDIF SEMICOLON Statement1 .
 
     $default  reduce using rule 15 (Statement)
 
 
-State 137
+State 138
 
    17 Statement: DO BEGINLOOP Statement ENDLOOP WHILE Bool_Exp SEMICOLON Statement1 .
 

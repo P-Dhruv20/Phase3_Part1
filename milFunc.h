@@ -35,6 +35,7 @@ std::vector <Function> symbol_table;
 std::vector <Node> op;
 std::vector <std::string> operands;
 std::vector <std::string> params;
+std::vector <std::string> args;
 
 int k = 0;
 
@@ -45,6 +46,13 @@ int parenthesis() {
     }
   }
   return -1;
+}
+
+void print_args(){
+  for(int i = 0; i < args.size();i++){
+    std::cout << args[i] << "| ";
+  }
+  std::cout << endl;
 }
 
 void org_params(){
@@ -68,6 +76,26 @@ void org_return_exp(){
   std::cout << node->src[1] << endl;
   std::cout << "ret " << temp;
   operands.clear();
+  args.clear();
+}
+
+void org_args() {
+  Node* node = new Node;
+  node->dst = args[0];
+  int comma_count = 0;
+
+  for (int i = 1; i < args.size(); i++) {
+    if (agrs[i] == ",") {
+      comma_count++;
+    }
+  }
+
+  if (comma_count < 2) {
+    
+  }
+  
+  operands.clear();
+  args.clear();
 }
 
 void organize_into_nodes() {
@@ -143,6 +171,7 @@ void organize_into_nodes() {
     }
   }
   operands.clear();
+  args.clear();
 }
 
 Function *get_function() {
