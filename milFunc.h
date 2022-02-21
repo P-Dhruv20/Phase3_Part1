@@ -34,6 +34,7 @@ struct Node {
 std::vector <Function> symbol_table;
 std::vector <Node> op;
 std::vector <std::string> operands;
+std::vector <std::string> params;
 
 int k = 0;
 
@@ -44,6 +45,29 @@ int parenthesis() {
     }
   }
   return -1;
+}
+
+void org_params(){
+  for(int i = 0; i < params.size();i++){
+    std::cout << "= " << params[i] << ", $" << i << endl;
+  }
+  params.clear();
+}
+
+void org_return_exp(){
+  Node *node = new Node;
+  node->src.push_back(operands[0]);
+  node->src.push_back(operands[2]);
+  node->operators.push_back(operands[1]);
+  std::string temp = "temp_" + to_string(k);
+  k++;
+  std::cout << ". " << temp << endl;
+  std::cout <<  node->operators[0] << " ";
+  std::cout << temp << ", ";
+  std::cout << node->src[0] << ", ";
+  std::cout << node->src[1] << endl;
+  std::cout << "ret " << temp;
+  operands.clear();
 }
 
 void organize_into_nodes() {
@@ -99,7 +123,6 @@ void organize_into_nodes() {
     
     if (node->type == Normal) {
       std::cout << "= " << node->dst << ", " << node->src[0] << endl;
-      return;
     }
     else {
 

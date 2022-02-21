@@ -89,9 +89,9 @@ Function:   FUNCTION IDENT {
   std::cout << "func " + func_name << endl;
   add_function_to_symbol_table(func_name);
 }
-SEMICOLON BEGIN_PARAMS Dec_colon END_PARAMS BEGIN_LOCALS Dec_colon END_LOCALS BEGIN_BODY Statement END_BODY
+SEMICOLON BEGIN_PARAMS Dec_colon {org_params();} END_PARAMS BEGIN_LOCALS Dec_colon {params.clear();} END_LOCALS BEGIN_BODY Statement END_BODY
 {
-  std::cout << "endfunc" << endl;
+  std::cout << "endfunc" << endl << endl;
 }
 ;
 Dec_colon:  Declaration SEMICOLON Dec_colon
@@ -102,6 +102,7 @@ Declaration:    IDENT COLON Array INTEGER {
         Type t = Integer;
         std:: cout << ". " + value << endl;
         add_variable_to_symbol_table(value, t);
+        params.push_back(value);
 }
 ;
 Array:  ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF
@@ -109,9 +110,7 @@ Array:  ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF
 ;
 Statement:  Var {operands.push_back($1);
                 }
-                ASSIGN Expression SEMICOLON 
-                {if (operands.size() > 0) {organize_into_nodes();} }
-                Statement1 
+                ASSIGN Expression SEMICOLON {if (operands.size() > 0) {organize_into_nodes();} } Statement1 
             | IF Bool_Exp THEN Statement Else_statement ENDIF SEMICOLON Statement1
             | WHILE Bool_Exp BEGINLOOP Statement ENDLOOP SEMICOLON Statement1
             | DO BEGINLOOP Statement ENDLOOP WHILE Bool_Exp SEMICOLON Statement1
@@ -119,7 +118,7 @@ Statement:  Var {operands.push_back($1);
             | WRITE Var {std::cout << ".> " << $2;} SEMICOLON {std::cout << endl;} Statement1
             | CONTINUE SEMICOLON {std::cout << endl;} Statement1
             | BREAK SEMICOLON {std::cout << endl;} Statement1
-            | RETURN Expression SEMICOLON {std::cout << endl;} Statement1
+            | RETURN Expression SEMICOLON {org_return_exp(); std::cout << endl;} Statement1
 ;
 Statement1 : Statement
         |
