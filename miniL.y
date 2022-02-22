@@ -76,9 +76,11 @@
 %type <stval> Term
 %type <stval> Mult_Op
 %type <stval> Add_Op
-%type <stval> Mult_Expr
+%type <stval> Multi_Exp
 %type <stval> Expression
 %type <stval> Array
+%type <stval> Var_arr
+
 %start Program
 
 %% 
@@ -101,24 +103,23 @@ Dec_colon:  Declaration SEMICOLON Dec_colon
 Declaration:    IDENT COLON Array INTEGER {
         std::string value = $1;
         std::string num = $3;
+        Type t;
 
-        Type t = Integer;
         std:: cout << ".";
 
         if (num != "") {
-                std::cout << "[] "; 
+                std::cout << "[] ";
+               t = Array; 
         }
         else {
                 std::cout << " ";
+                t = Integer;
         }
-
         std::cout << value;
         if (num != "") {
                 std::cout << ", " << num; 
         }
-
         std::cout << endl;
-
         add_variable_to_symbol_table(value, t);
         params.push_back(value);
 }
@@ -127,14 +128,17 @@ Array:  ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF
         {$$ = $3;}
         | {$$ = "";}
 ;
-Statement:  Var {operands.push_back($1); args.push_back($1);
+Statement:  Var {operands.push_back($1); args.push_back($1); arr.push_back($1);
                 }
-                ASSIGN Expression SEMICOLON {if (operands.size() > 0) {organize_into_nodes();} } Statement1 
+                ASSIGN Expression SEMICOLON {if (operands.size() > 0) {organize_into_nodes();} } Statement1
+            | Var_arr { arr.push_back($1);} ASSIGN Expression SEMICOLON {if (arr.size() > 0) {org_array();} } Statement1 
             | IF Bool_Exp THEN Statement Else_statement ENDIF SEMICOLON Statement1
             | WHILE Bool_Exp BEGINLOOP Statement ENDLOOP SEMICOLON Statement1
             | DO BEGINLOOP Statement ENDLOOP WHILE Bool_Exp SEMICOLON Statement1
             | READ Var {std::cout << ".< " << $2;} SEMICOLON {std::cout << endl;} Statement1
             | WRITE Var {std::cout << ".> " << $2;} SEMICOLON {std::cout << endl;} Statement1
+            | READ Var_arr SEMICOLON {std::cout << endl;} Statement1
+            | WRITE Var_arr SEMICOLON {std::cout << endl;} Statement1
             | CONTINUE SEMICOLON {std::cout << endl;} Statement1
             | BREAK SEMICOLON {std::cout << endl;} Statement1
             | RETURN Expression SEMICOLON {org_return_exp(); std::cout << endl;} Statement1
@@ -161,51 +165,54 @@ Comp:   EQ
 Expression: Multi_Exp Add_Op 
 ;
 Add_Op: ADD 
-        { operands.push_back("+"); args.push_back("+");
+        { operands.push_back("+"); args.push_back("+"); arr.push_back("+");
         }
         Expression 
         | MINUS
-        { operands.push_back("-"); args.push_back("-");
+        { operands.push_back("-"); args.push_back("-"); arr.push_back("-");
         }
         Expression
-        | 
+        | {}
 ;
 
 Multi_Exp:  Term 
         Mult_Op 
 ;
 Mult_Op:    MULT 
-        { operands.push_back("*"); args.push_back("*");
+        { operands.push_back("*"); args.push_back("*"); arr.push_back("*");
         }
         Multi_Exp
             | DIV
-            { operands.push_back("/"); args.push_back("/");
+            { operands.push_back("/"); args.push_back("/"); arr.push_back("/");
         }
         Multi_Exp
             | MOD
-            { operands.push_back("%"); args.push_back("%");
+            { operands.push_back("%"); args.push_back("%"); arr.push_back("%");
         }
         Multi_Exp
-            | 
+            | {}
 ;
-Term:   Var {operands.push_back($1); args.push_back($1);}
-        | NUMBER  {operands.push_back($1); args.push_back($1); $$ = $1;}
-        | L_PAREN {operands.push_back("(");} Expression {organize_into_nodes();} R_PAREN 
+Term:   Var {operands.push_back($1); args.push_back($1); arr.push_back($1);}
+        | Var_arr {arr.push_back($1);}
+        | NUMBER  {operands.push_back($1); args.push_back($1); $$ = $1; arr.push_back($1);}
+        | L_PAREN {operands.push_back("("); arr.push_back("(");} Expression {organize_into_nodes(); } R_PAREN 
         | IDENT L_PAREN Term_Exp R_PAREN {args.push_back($1); org_args();}
 ;
 Term_Exp:   Expression
             | Expression COMMA {args.push_back(",");} Term_Exp 
-            | 
+            | {}
 ;
-Var:    IDENT {$$ = $1;}
-        | IDENT L_SQUARE_BRACKET Expression R_SQUARE_BRACKET
+Var:    IDENT {$$ = $1;} 
 ;
+Var_arr:    IDENT L_SQUARE_BRACKET Expression { $$ = $1; org_array();} R_SQUARE_BRACKET
+;
+
 %% 
 
 int main(int argc, char **argv) {
    yyin = stdin;
    yyparse();
-/* print_symbol_table(); */
+   print_symbol_table();
    return 0;
 }
 

@@ -36,6 +36,7 @@ std::vector <Node> op;
 std::vector <std::string> operands;
 std::vector <std::string> params;
 std::vector <std::string> args;
+std::vector <std::string> arr;
 
 int k = 0;
 
@@ -48,9 +49,9 @@ int parenthesis() {
   return -1;
 }
 
-void print_args(){
-  for(int i = 0; i < args.size();i++){
-    std::cout << args[i] << "| ";
+void print_arr(){
+  for(int i = 0; i < arr.size();i++){
+    std::cout << arr[i] << "| ";
   }
   std::cout << endl;
 }
@@ -60,6 +61,11 @@ void org_params(){
     std::cout << "= " << params[i] << ", $" << i << endl;
   }
   params.clear();
+}
+
+void org_array(){
+  Node *node = new Node;
+  print_arr();
 }
 
 void org_return_exp(){
@@ -77,6 +83,7 @@ void org_return_exp(){
   std::cout << "ret " << temp;
   operands.clear();
   args.clear();
+  arr.clear();
 }
 
 void org_args() {
@@ -155,7 +162,9 @@ void org_args() {
     std::cout << "= " << node->dst << ", " << temp << endl;
   operands.clear();
   args.clear();
+  arr.clear();
 }
+
 
 void organize_into_nodes() {
   Node *node = new Node;
@@ -231,6 +240,7 @@ void organize_into_nodes() {
   }
   operands.clear();
   args.clear();
+  arr.clear();
 }
 
 Function *get_function() {
@@ -271,7 +281,8 @@ void print_symbol_table(void) {
   for(int i=0; i<symbol_table.size(); i++) {
     printf("function: %s\n", symbol_table[i].name.c_str());
     for(int j=0; j<symbol_table[i].declarations.size(); j++) {
-      printf("  locals: %s\n", symbol_table[i].declarations[j].name.c_str());
+      if(symbol_table[i].declarations[j].type == Array){ printf("  locals: %s[]\n", symbol_table[i].declarations[j].name.c_str());}
+      else { printf("  locals: %s\n", symbol_table[i].declarations[j].name.c_str());}
     }
   }
   printf("--------------------\n");
