@@ -1,8 +1,3 @@
-Nonterminals useless in grammar
-
-   Mult_Expr
-
-
 Terminals unused in grammar
 
    TRUE
@@ -147,11 +142,7 @@ Grammar
 
    76 Var: IDENT
 
-   77 $@25: %empty
-
-   78 $@26: %empty
-
-   79 Var_arr: IDENT $@25 L_SQUARE_BRACKET Expression $@26 R_SQUARE_BRACKET
+   77 Var_arr: IDENT L_SQUARE_BRACKET Expression R_SQUARE_BRACKET
 
 
 Terminals, with rules where they appear
@@ -159,7 +150,7 @@ Terminals, with rules where they appear
 $end (0) 0
 error (256)
 NUMBER (258) 10 67
-IDENT (259) 6 9 71 76 79
+IDENT (259) 6 9 71 76 77
 FUNCTION (260) 6
 BEGIN_PARAMS (261) 6
 END_PARAMS (262) 6
@@ -202,8 +193,8 @@ COLON (298) 9
 COMMA (299) 74
 L_PAREN (300) 70 71
 R_PAREN (301) 70 71
-L_SQUARE_BRACKET (302) 10 79
-R_SQUARE_BRACKET (303) 10 79
+L_SQUARE_BRACKET (302) 10 77
+R_SQUARE_BRACKET (303) 10 77
 ASSIGN (304) 14 17
 
 
@@ -267,7 +258,7 @@ Not (76)
 Comp (77)
     on left: 44 45 46 47 48 49 50, on right: 41
 Expression (78)
-    on left: 51, on right: 14 17 36 41 53 55 70 72 74 79
+    on left: 51, on right: 14 17 36 41 53 55 70 72 74 77
 Add_Op (79)
     on left: 53 55 56, on right: 51
 $@17 (80)
@@ -297,11 +288,7 @@ $@24 (91)
 Var (92)
     on left: 76, on right: 14 23 26 65
 Var_arr (93)
-    on left: 79, on right: 17 28 30 66
-$@25 (94)
-    on left: 77, on right: 79
-$@26 (95)
-    on left: 78, on right: 79
+    on left: 77, on right: 17 28 30 66
 
 
 State 0
@@ -564,12 +551,11 @@ State 29
 State 30
 
    76 Var: IDENT .
-   79 Var_arr: IDENT . $@25 L_SQUARE_BRACKET Expression $@26 R_SQUARE_BRACKET
+   77 Var_arr: IDENT . L_SQUARE_BRACKET Expression R_SQUARE_BRACKET
 
-    L_SQUARE_BRACKET  reduce using rule 77 ($@25)
-    $default          reduce using rule 76 (Var)
+    L_SQUARE_BRACKET  shift, and go to state 42
 
-    $@25  go to state 42
+    $default  reduce using rule 76 (Var)
 
 
 State 31
@@ -681,9 +667,17 @@ State 41
 
 State 42
 
-   79 Var_arr: IDENT $@25 . L_SQUARE_BRACKET Expression $@26 R_SQUARE_BRACKET
+   77 Var_arr: IDENT L_SQUARE_BRACKET . Expression R_SQUARE_BRACKET
 
-    L_SQUARE_BRACKET  shift, and go to state 65
+    NUMBER   shift, and go to state 54
+    IDENT    shift, and go to state 55
+    L_PAREN  shift, and go to state 56
+
+    Expression  go to state 65
+    Multi_Exp   go to state 58
+    Term        go to state 59
+    Var         go to state 60
+    Var_arr     go to state 61
 
 
 State 43
@@ -802,15 +796,13 @@ State 55
 
    71 Term: IDENT . L_PAREN Term_Exp R_PAREN
    76 Var: IDENT .
-   79 Var_arr: IDENT . $@25 L_SQUARE_BRACKET Expression $@26 R_SQUARE_BRACKET
+   77 Var_arr: IDENT . L_SQUARE_BRACKET Expression R_SQUARE_BRACKET
 
-    L_PAREN  shift, and go to state 76
+    L_PAREN           shift, and go to state 76
+    L_SQUARE_BRACKET  shift, and go to state 42
 
-    L_PAREN           [reduce using rule 76 (Var)]
-    L_SQUARE_BRACKET  reduce using rule 77 ($@25)
-    $default          reduce using rule 76 (Var)
-
-    $@25  go to state 42
+    L_PAREN   [reduce using rule 76 (Var)]
+    $default  reduce using rule 76 (Var)
 
 
 State 56
@@ -891,17 +883,9 @@ State 64
 
 State 65
 
-   79 Var_arr: IDENT $@25 L_SQUARE_BRACKET . Expression $@26 R_SQUARE_BRACKET
+   77 Var_arr: IDENT L_SQUARE_BRACKET Expression . R_SQUARE_BRACKET
 
-    NUMBER   shift, and go to state 54
-    IDENT    shift, and go to state 55
-    L_PAREN  shift, and go to state 56
-
-    Expression  go to state 88
-    Multi_Exp   go to state 58
-    Term        go to state 59
-    Var         go to state 60
-    Var_arr     go to state 61
+    R_SQUARE_BRACKET  shift, and go to state 88
 
 
 State 66
@@ -1174,22 +1158,20 @@ State 87
 
 State 88
 
-   79 Var_arr: IDENT $@25 L_SQUARE_BRACKET Expression . $@26 R_SQUARE_BRACKET
+   77 Var_arr: IDENT L_SQUARE_BRACKET Expression R_SQUARE_BRACKET .
 
-    $default  reduce using rule 78 ($@26)
-
-    $@26  go to state 117
+    $default  reduce using rule 77 (Var_arr)
 
 
 State 89
 
    18 Statement: IF Bool_Exp THEN Statement . Else_statement ENDIF SEMICOLON Statement1
 
-    ELSE  shift, and go to state 118
+    ELSE  shift, and go to state 117
 
     $default  reduce using rule 40 (Else_statement)
 
-    Else_statement  go to state 119
+    Else_statement  go to state 118
 
 
 State 90
@@ -1242,7 +1224,7 @@ State 96
     IDENT    shift, and go to state 55
     L_PAREN  shift, and go to state 56
 
-    Expression  go to state 120
+    Expression  go to state 119
     Multi_Exp   go to state 58
     Term        go to state 59
     Var         go to state 60
@@ -1253,14 +1235,14 @@ State 97
 
    19 Statement: WHILE Bool_Exp BEGINLOOP Statement . ENDLOOP SEMICOLON Statement1
 
-    ENDLOOP  shift, and go to state 121
+    ENDLOOP  shift, and go to state 120
 
 
 State 98
 
    20 Statement: DO BEGINLOOP Statement ENDLOOP . WHILE Bool_Exp SEMICOLON Statement1
 
-    WHILE  shift, and go to state 122
+    WHILE  shift, and go to state 121
 
 
 State 99
@@ -1290,7 +1272,7 @@ State 102
 
     $default  reduce using rule 22 ($@9)
 
-    $@9  go to state 123
+    $@9  go to state 122
 
 
 State 103
@@ -1310,7 +1292,7 @@ State 103
     $default  reduce using rule 38 (Statement1)
 
     Statement   go to state 99
-    Statement1  go to state 124
+    Statement1  go to state 123
     Var         go to state 40
     Var_arr     go to state 41
 
@@ -1321,7 +1303,7 @@ State 104
 
     $default  reduce using rule 25 ($@11)
 
-    $@11  go to state 125
+    $@11  go to state 124
 
 
 State 105
@@ -1341,7 +1323,7 @@ State 105
     $default  reduce using rule 38 (Statement1)
 
     Statement   go to state 99
-    Statement1  go to state 126
+    Statement1  go to state 125
     Var         go to state 40
     Var_arr     go to state 41
 
@@ -1351,7 +1333,7 @@ State 106
    72 Term_Exp: Expression .
    74         | Expression . COMMA $@24 Term_Exp
 
-    COMMA  shift, and go to state 127
+    COMMA  shift, and go to state 126
 
     $default  reduce using rule 72 (Term_Exp)
 
@@ -1360,7 +1342,7 @@ State 107
 
    71 Term: IDENT L_PAREN Term_Exp . R_PAREN
 
-    R_PAREN  shift, and go to state 128
+    R_PAREN  shift, and go to state 127
 
 
 State 108
@@ -1369,7 +1351,7 @@ State 108
 
     $default  reduce using rule 69 ($@23)
 
-    $@23  go to state 129
+    $@23  go to state 128
 
 
 State 109
@@ -1389,7 +1371,7 @@ State 109
     $default  reduce using rule 38 (Statement1)
 
     Statement   go to state 99
-    Statement1  go to state 130
+    Statement1  go to state 129
     Var         go to state 40
     Var_arr     go to state 41
 
@@ -1402,7 +1384,7 @@ State 110
     IDENT    shift, and go to state 55
     L_PAREN  shift, and go to state 56
 
-    Expression  go to state 131
+    Expression  go to state 130
     Multi_Exp   go to state 58
     Term        go to state 59
     Var         go to state 60
@@ -1417,7 +1399,7 @@ State 111
     IDENT    shift, and go to state 55
     L_PAREN  shift, and go to state 56
 
-    Expression  go to state 132
+    Expression  go to state 131
     Multi_Exp   go to state 58
     Term        go to state 59
     Var         go to state 60
@@ -1432,7 +1414,7 @@ State 112
     IDENT    shift, and go to state 55
     L_PAREN  shift, and go to state 56
 
-    Multi_Exp  go to state 133
+    Multi_Exp  go to state 132
     Term       go to state 59
     Var        go to state 60
     Var_arr    go to state 61
@@ -1446,7 +1428,7 @@ State 113
     IDENT    shift, and go to state 55
     L_PAREN  shift, and go to state 56
 
-    Multi_Exp  go to state 134
+    Multi_Exp  go to state 133
     Term       go to state 59
     Var        go to state 60
     Var_arr    go to state 61
@@ -1460,7 +1442,7 @@ State 114
     IDENT    shift, and go to state 55
     L_PAREN  shift, and go to state 56
 
-    Multi_Exp  go to state 135
+    Multi_Exp  go to state 134
     Term       go to state 59
     Var        go to state 60
     Var_arr    go to state 61
@@ -1470,24 +1452,17 @@ State 115
 
    14 Statement: Var $@4 ASSIGN Expression . SEMICOLON $@5 Statement1
 
-    SEMICOLON  shift, and go to state 136
+    SEMICOLON  shift, and go to state 135
 
 
 State 116
 
    17 Statement: Var_arr $@6 ASSIGN Expression . SEMICOLON $@7 Statement1
 
-    SEMICOLON  shift, and go to state 137
+    SEMICOLON  shift, and go to state 136
 
 
 State 117
-
-   79 Var_arr: IDENT $@25 L_SQUARE_BRACKET Expression $@26 . R_SQUARE_BRACKET
-
-    R_SQUARE_BRACKET  shift, and go to state 138
-
-
-State 118
 
    39 Else_statement: ELSE . Statement
 
@@ -1501,33 +1476,33 @@ State 118
     WRITE     shift, and go to state 37
     RETURN    shift, and go to state 38
 
-    Statement  go to state 139
+    Statement  go to state 137
     Var        go to state 40
     Var_arr    go to state 41
 
 
-State 119
+State 118
 
    18 Statement: IF Bool_Exp THEN Statement Else_statement . ENDIF SEMICOLON Statement1
 
-    ENDIF  shift, and go to state 140
+    ENDIF  shift, and go to state 138
 
 
-State 120
+State 119
 
    41 Bool_Exp: Not Expression Comp Expression .
 
     $default  reduce using rule 41 (Bool_Exp)
 
 
-State 121
+State 120
 
    19 Statement: WHILE Bool_Exp BEGINLOOP Statement ENDLOOP . SEMICOLON Statement1
 
-    SEMICOLON  shift, and go to state 141
+    SEMICOLON  shift, and go to state 139
 
 
-State 122
+State 121
 
    20 Statement: DO BEGINLOOP Statement ENDLOOP WHILE . Bool_Exp SEMICOLON Statement1
 
@@ -1535,11 +1510,11 @@ State 122
 
     $default  reduce using rule 43 (Not)
 
-    Bool_Exp  go to state 142
+    Bool_Exp  go to state 140
     Not       go to state 45
 
 
-State 123
+State 122
 
    23 Statement: READ Var $@8 SEMICOLON $@9 . Statement1
 
@@ -1556,19 +1531,19 @@ State 123
     $default  reduce using rule 38 (Statement1)
 
     Statement   go to state 99
-    Statement1  go to state 143
+    Statement1  go to state 141
     Var         go to state 40
     Var_arr     go to state 41
 
 
-State 124
+State 123
 
    28 Statement: READ Var_arr SEMICOLON $@12 Statement1 .
 
     $default  reduce using rule 28 (Statement)
 
 
-State 125
+State 124
 
    26 Statement: WRITE Var $@10 SEMICOLON $@11 . Statement1
 
@@ -1585,123 +1560,116 @@ State 125
     $default  reduce using rule 38 (Statement1)
 
     Statement   go to state 99
-    Statement1  go to state 144
+    Statement1  go to state 142
     Var         go to state 40
     Var_arr     go to state 41
 
 
-State 126
+State 125
 
    30 Statement: WRITE Var_arr SEMICOLON $@13 Statement1 .
 
     $default  reduce using rule 30 (Statement)
 
 
-State 127
+State 126
 
    74 Term_Exp: Expression COMMA . $@24 Term_Exp
 
     $default  reduce using rule 73 ($@24)
 
-    $@24  go to state 145
+    $@24  go to state 143
 
 
-State 128
+State 127
 
    71 Term: IDENT L_PAREN Term_Exp R_PAREN .
 
     $default  reduce using rule 71 (Term)
 
 
-State 129
+State 128
 
    70 Term: L_PAREN $@22 Expression $@23 . R_PAREN
 
-    R_PAREN  shift, and go to state 146
+    R_PAREN  shift, and go to state 144
 
 
-State 130
+State 129
 
    36 Statement: RETURN Expression SEMICOLON $@16 Statement1 .
 
     $default  reduce using rule 36 (Statement)
 
 
-State 131
+State 130
 
    55 Add_Op: MINUS $@18 Expression .
 
     $default  reduce using rule 55 (Add_Op)
 
 
-State 132
+State 131
 
    53 Add_Op: ADD $@17 Expression .
 
     $default  reduce using rule 53 (Add_Op)
 
 
-State 133
+State 132
 
    59 Mult_Op: MULT $@19 Multi_Exp .
 
     $default  reduce using rule 59 (Mult_Op)
 
 
-State 134
+State 133
 
    61 Mult_Op: DIV $@20 Multi_Exp .
 
     $default  reduce using rule 61 (Mult_Op)
 
 
-State 135
+State 134
 
    63 Mult_Op: MOD $@21 Multi_Exp .
 
     $default  reduce using rule 63 (Mult_Op)
 
 
-State 136
+State 135
 
    14 Statement: Var $@4 ASSIGN Expression SEMICOLON . $@5 Statement1
 
     $default  reduce using rule 13 ($@5)
 
-    $@5  go to state 147
+    $@5  go to state 145
 
 
-State 137
+State 136
 
    17 Statement: Var_arr $@6 ASSIGN Expression SEMICOLON . $@7 Statement1
 
     $default  reduce using rule 16 ($@7)
 
-    $@7  go to state 148
+    $@7  go to state 146
 
 
-State 138
-
-   79 Var_arr: IDENT $@25 L_SQUARE_BRACKET Expression $@26 R_SQUARE_BRACKET .
-
-    $default  reduce using rule 79 (Var_arr)
-
-
-State 139
+State 137
 
    39 Else_statement: ELSE Statement .
 
     $default  reduce using rule 39 (Else_statement)
 
 
-State 140
+State 138
 
    18 Statement: IF Bool_Exp THEN Statement Else_statement ENDIF . SEMICOLON Statement1
 
-    SEMICOLON  shift, and go to state 149
+    SEMICOLON  shift, and go to state 147
 
 
-State 141
+State 139
 
    19 Statement: WHILE Bool_Exp BEGINLOOP Statement ENDLOOP SEMICOLON . Statement1
 
@@ -1718,33 +1686,33 @@ State 141
     $default  reduce using rule 38 (Statement1)
 
     Statement   go to state 99
-    Statement1  go to state 150
+    Statement1  go to state 148
     Var         go to state 40
     Var_arr     go to state 41
 
 
-State 142
+State 140
 
    20 Statement: DO BEGINLOOP Statement ENDLOOP WHILE Bool_Exp . SEMICOLON Statement1
 
-    SEMICOLON  shift, and go to state 151
+    SEMICOLON  shift, and go to state 149
 
 
-State 143
+State 141
 
    23 Statement: READ Var $@8 SEMICOLON $@9 Statement1 .
 
     $default  reduce using rule 23 (Statement)
 
 
-State 144
+State 142
 
    26 Statement: WRITE Var $@10 SEMICOLON $@11 Statement1 .
 
     $default  reduce using rule 26 (Statement)
 
 
-State 145
+State 143
 
    74 Term_Exp: Expression COMMA $@24 . Term_Exp
 
@@ -1757,21 +1725,65 @@ State 145
     Expression  go to state 106
     Multi_Exp   go to state 58
     Term        go to state 59
-    Term_Exp    go to state 152
+    Term_Exp    go to state 150
     Var         go to state 60
     Var_arr     go to state 61
 
 
-State 146
+State 144
 
    70 Term: L_PAREN $@22 Expression $@23 R_PAREN .
 
     $default  reduce using rule 70 (Term)
 
 
-State 147
+State 145
 
    14 Statement: Var $@4 ASSIGN Expression SEMICOLON $@5 . Statement1
+
+    IDENT     shift, and go to state 30
+    IF        shift, and go to state 31
+    WHILE     shift, and go to state 32
+    DO        shift, and go to state 33
+    CONTINUE  shift, and go to state 34
+    BREAK     shift, and go to state 35
+    READ      shift, and go to state 36
+    WRITE     shift, and go to state 37
+    RETURN    shift, and go to state 38
+
+    $default  reduce using rule 38 (Statement1)
+
+    Statement   go to state 99
+    Statement1  go to state 151
+    Var         go to state 40
+    Var_arr     go to state 41
+
+
+State 146
+
+   17 Statement: Var_arr $@6 ASSIGN Expression SEMICOLON $@7 . Statement1
+
+    IDENT     shift, and go to state 30
+    IF        shift, and go to state 31
+    WHILE     shift, and go to state 32
+    DO        shift, and go to state 33
+    CONTINUE  shift, and go to state 34
+    BREAK     shift, and go to state 35
+    READ      shift, and go to state 36
+    WRITE     shift, and go to state 37
+    RETURN    shift, and go to state 38
+
+    $default  reduce using rule 38 (Statement1)
+
+    Statement   go to state 99
+    Statement1  go to state 152
+    Var         go to state 40
+    Var_arr     go to state 41
+
+
+State 147
+
+   18 Statement: IF Bool_Exp THEN Statement Else_statement ENDIF SEMICOLON . Statement1
 
     IDENT     shift, and go to state 30
     IF        shift, and go to state 31
@@ -1793,7 +1805,14 @@ State 147
 
 State 148
 
-   17 Statement: Var_arr $@6 ASSIGN Expression SEMICOLON $@7 . Statement1
+   19 Statement: WHILE Bool_Exp BEGINLOOP Statement ENDLOOP SEMICOLON Statement1 .
+
+    $default  reduce using rule 19 (Statement)
+
+
+State 149
+
+   20 Statement: DO BEGINLOOP Statement ENDLOOP WHILE Bool_Exp SEMICOLON . Statement1
 
     IDENT     shift, and go to state 30
     IF        shift, and go to state 31
@@ -1813,86 +1832,35 @@ State 148
     Var_arr     go to state 41
 
 
-State 149
-
-   18 Statement: IF Bool_Exp THEN Statement Else_statement ENDIF SEMICOLON . Statement1
-
-    IDENT     shift, and go to state 30
-    IF        shift, and go to state 31
-    WHILE     shift, and go to state 32
-    DO        shift, and go to state 33
-    CONTINUE  shift, and go to state 34
-    BREAK     shift, and go to state 35
-    READ      shift, and go to state 36
-    WRITE     shift, and go to state 37
-    RETURN    shift, and go to state 38
-
-    $default  reduce using rule 38 (Statement1)
-
-    Statement   go to state 99
-    Statement1  go to state 155
-    Var         go to state 40
-    Var_arr     go to state 41
-
-
 State 150
-
-   19 Statement: WHILE Bool_Exp BEGINLOOP Statement ENDLOOP SEMICOLON Statement1 .
-
-    $default  reduce using rule 19 (Statement)
-
-
-State 151
-
-   20 Statement: DO BEGINLOOP Statement ENDLOOP WHILE Bool_Exp SEMICOLON . Statement1
-
-    IDENT     shift, and go to state 30
-    IF        shift, and go to state 31
-    WHILE     shift, and go to state 32
-    DO        shift, and go to state 33
-    CONTINUE  shift, and go to state 34
-    BREAK     shift, and go to state 35
-    READ      shift, and go to state 36
-    WRITE     shift, and go to state 37
-    RETURN    shift, and go to state 38
-
-    $default  reduce using rule 38 (Statement1)
-
-    Statement   go to state 99
-    Statement1  go to state 156
-    Var         go to state 40
-    Var_arr     go to state 41
-
-
-State 152
 
    74 Term_Exp: Expression COMMA $@24 Term_Exp .
 
     $default  reduce using rule 74 (Term_Exp)
 
 
-State 153
+State 151
 
    14 Statement: Var $@4 ASSIGN Expression SEMICOLON $@5 Statement1 .
 
     $default  reduce using rule 14 (Statement)
 
 
-State 154
+State 152
 
    17 Statement: Var_arr $@6 ASSIGN Expression SEMICOLON $@7 Statement1 .
 
     $default  reduce using rule 17 (Statement)
 
 
-State 155
+State 153
 
    18 Statement: IF Bool_Exp THEN Statement Else_statement ENDIF SEMICOLON Statement1 .
 
     $default  reduce using rule 18 (Statement)
 
 
-State 156
+State 154
 
    20 Statement: DO BEGINLOOP Statement ENDLOOP WHILE Bool_Exp SEMICOLON Statement1 .
 

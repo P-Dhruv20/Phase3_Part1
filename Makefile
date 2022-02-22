@@ -1,3 +1,4 @@
+miniL.y: CPPFLAGS-=-Wwrite-strings
 all:
 	bison -v -d --file-prefix=y miniL.y
 	flex miniL.lex

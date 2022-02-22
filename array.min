@@ -24,3 +24,4 @@ beginbody	## main program
 
   a[3] := a[0] * (a[1] + c);
   write a[3];    ## should print out 840; since 840 = 8 * (100 +5)
+endbody

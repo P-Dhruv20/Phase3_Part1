@@ -74,8 +74,6 @@
 
 %type <stval> Var
 %type <stval> Term
-%type <stval> Mult_Op
-%type <stval> Add_Op
 %type <stval> Multi_Exp
 %type <stval> Expression
 %type <stval> Array
@@ -104,7 +102,12 @@ Declaration:    IDENT COLON Array INTEGER {
         std::string value = $1;
         std::string num = $3;
         Type t;
-
+        if(find(value)) {std::string msg = "identifier exists";
+	char a[msg.size()];
+	strcpy(a, msg.c_str());
+        yyerror(a);
+        }
+        else{
         std:: cout << ".";
 
         if (num != "") {
@@ -122,6 +125,7 @@ Declaration:    IDENT COLON Array INTEGER {
         std::cout << endl;
         add_variable_to_symbol_table(value, t);
         params.push_back(value);
+        }
 }
 
 Array:  ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF
@@ -196,15 +200,39 @@ Term:   Var {operands.push_back($1); args.push_back($1); arr.push_back($1);}
         | Var_arr {arr.push_back($1);}
         | NUMBER  {operands.push_back($1); args.push_back($1); $$ = $1; arr.push_back($1);}
         | L_PAREN {operands.push_back("("); arr.push_back("(");} Expression {organize_into_nodes(); } R_PAREN 
-        | IDENT L_PAREN Term_Exp R_PAREN {args.push_back($1); org_args();}
+        | IDENT L_PAREN Term_Exp R_PAREN {                
+                std::string val = $1;
+                if(find(val)) {args.push_back($1); org_args();}
+                else {  std::string msg = "Unidentified identifier";
+	        char a[msg.size()];
+		strcpy(a, msg.c_str());
+                yyerror(a);
+                }
+        }
 ;
 Term_Exp:   Expression
             | Expression COMMA {args.push_back(",");} Term_Exp 
             | {}
 ;
-Var:    IDENT {$$ = $1;} 
+Var:    IDENT {  
+        std::string val = $1;
+        if(find(val)) {$$ = $1;}
+        else {  std::string msg = "Unidentified identifier";
+	        char a[msg.size()];
+		strcpy(a, msg.c_str());
+                yyerror(a);
+                }
+        } 
 ;
-Var_arr:    IDENT L_SQUARE_BRACKET Expression { $$ = $1; org_array();} R_SQUARE_BRACKET
+Var_arr:    IDENT L_SQUARE_BRACKET Expression R_SQUARE_BRACKET {        
+                std::string val = $1;
+                if(find(val)) {$$ = $1; org_array();}
+                else {  std::string msg = "Unidentified identifier";
+	        char a[msg.size()];
+		strcpy(a, msg.c_str());
+                yyerror(a);
+                }
+                }
 ;
 
 %% 
@@ -212,6 +240,12 @@ Var_arr:    IDENT L_SQUARE_BRACKET Expression { $$ = $1; org_array();} R_SQUARE_
 int main(int argc, char **argv) {
    yyin = stdin;
    yyparse();
+   std::string val = "main"; 
+   if(!find(val)){ std::string msg = "Not defined main";
+	        char a[msg.size()];
+		strcpy(a, msg.c_str());
+                yyerror(a);
+                }
    print_symbol_table();
    return 0;
 }
