@@ -83,17 +83,76 @@ void org_args() {
   Node* node = new Node;
   node->dst = args[0];
   int comma_count = 0;
+  int comma_index;
 
   for (int i = 1; i < args.size(); i++) {
-    if (agrs[i] == ",") {
+    if (args[i] == ",") {
       comma_count++;
+      comma_index = i;
     }
   }
 
-  if (comma_count < 2) {
-    
+  if (comma_count == 0) {
+    if((args.size()-2-comma_count) == 1){
+      std::cout << "param " << args[1] << endl;
+    }
+    else{
+    std::string temp = "temp_" + to_string(k);
+    k++;
+    std::cout << ". " << temp << endl;
+    std::cout <<  args[2] << " ";
+    std::cout << temp << ", ";
+    std::cout << args[1] << ", ";
+    std::cout << args[3] << endl;
+    std::cout << "param " << temp << endl;
+    }  
   }
-  
+  else if (comma_count == 1) {
+    if(comma_index == 2){
+      std::cout << "param " << args[1] << endl;
+      if((args.size()-4) == 1){
+        std::cout << "param " << args[3] << endl;
+      }
+      else{
+        std::string temp = "temp_" + to_string(k);
+        k++;
+        std::cout << ". " << temp << endl;
+        std::cout <<  args[4] << " ";
+        std::cout << temp << ", ";
+        std::cout << args[3] << ", ";
+        std::cout << args[5] << endl;
+        std::cout << "param " << temp << endl;
+      }
+    }
+    else if(comma_index == 4){
+        std::string temp = "temp_" + to_string(k);
+        k++;
+        std::cout << ". " << temp << endl;
+        std::cout <<  args[2] << " ";
+        std::cout << temp << ", ";
+        std::cout << args[1] << ", ";
+        std::cout << args[3] << endl;
+        std::cout << "param " << temp << endl;
+      if((args.size()-6) == 1){
+        std::cout << "param " << args[5] << endl;
+      }
+      else{
+        std::string temp = "temp_" + to_string(k);
+        k++;
+        std::cout << ". " << temp << endl;
+        std::cout <<  args[6] << " ";
+        std::cout << temp << ", ";
+        std::cout << args[5] << ", ";
+        std::cout << args[7] << endl;
+        std::cout << "param " << temp << endl;
+      }
+    }
+  }
+    std::string temp = "temp_" + to_string(k);
+    k++;
+    std::cout << ". " << temp << endl;
+    std::cout << "call " << args[args.size()-1] << ", " << temp << endl;
+    std::cout << "= " << node->dst << ", " << temp << endl;
   operands.clear();
   args.clear();
 }

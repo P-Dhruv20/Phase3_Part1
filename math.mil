@@ -4,28 +4,25 @@ func main
 . c
 = a, 100
 = b, 50
-. _temp0
-+ _temp0, a, b
-= c, _temp0
+. temp_0
++ temp_0, a, b
+= c, temp_0
 .> c
-. _temp1
-- _temp1, a, b
-= c, _temp1
+. temp_1
+- temp_1, a, b
+= c, temp_1
 .> c
-. _temp2
-* _temp2, a, b
-= c, _temp2
+. temp_2
+* temp_2, a, b
+= c, temp_2
 .> c
-. _temp3
-/ _temp3, a, b
-= c, _temp3
+. temp_3
+/ temp_3, a, b
+= c, temp_3
 .> c
-. _temp4
-* _temp4, b, 3
-. _temp5
-% _temp5, a, _temp4
-= c, _temp5
+. temp_4
+% temp_4, a, b
+= c, temp_4
 .> c
 endfunc
-
 

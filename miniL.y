@@ -172,7 +172,7 @@ Mult_Op:    MULT
 Term:   Var {operands.push_back($1); args.push_back($1);}
         | NUMBER  {operands.push_back($1); args.push_back($1);}
         | L_PAREN {operands.push_back("(");} Expression {organize_into_nodes();} R_PAREN 
-        | IDENT L_PAREN Term_Exp R_PAREN {args.push_back($1); print_args();}
+        | IDENT L_PAREN Term_Exp R_PAREN {args.push_back($1); org_args();}
 ;
 Term_Exp:   Expression
             | Expression COMMA {args.push_back(",");} Term_Exp 
@@ -186,6 +186,7 @@ Var:    IDENT {$$ = $1;}
 int main(int argc, char **argv) {
    yyin = stdin;
    yyparse();
+/* print_symbol_table(); */
    return 0;
 }
 

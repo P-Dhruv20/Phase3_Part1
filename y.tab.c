@@ -1627,7 +1627,7 @@ yyreduce:
 
   case 64:
 #line 175 "miniL.y" /* yacc.c:1646  */
-    {args.push_back((yyvsp[-3].stval)); print_args();}
+    {args.push_back((yyvsp[-3].stval)); org_args();}
 #line 1632 "y.tab.c" /* yacc.c:1646  */
     break;
 
@@ -1885,6 +1885,7 @@ yyreturn:
 int main(int argc, char **argv) {
    yyin = stdin;
    yyparse();
+/* print_symbol_table(); */
    return 0;
 }
 
