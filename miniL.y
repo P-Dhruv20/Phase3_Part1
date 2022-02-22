@@ -136,19 +136,69 @@ Declaration:    IDENT COLON Array INTEGER {
 
 Array:  ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF
         {$$ = $3;}
-        | {$$ = "";}
+        | {
+                char a[1];
+                strcpy(a, "");
+                $$ = a;
+                }
 ;
 Statement:  Var {operands.push_back($1); args.push_back($1); arr.push_back($1);
                 }
                 ASSIGN Expression SEMICOLON {if (operands.size() > 0) {organize_into_nodes();} } Statement1
-            | Var_arr { arr.push_back($1);} ASSIGN Expression SEMICOLON {if (arr.size() > 0) {org_array();} } Statement1 
+                     | IDENT L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET ASSIGN Var ADD Var {
+                        std::string temp = "temp_" + to_string(k);
+                        k++;
+                        std::cout << ". " << temp << endl;
+                        std::cout << "+ " << temp << ", " << $6 << ", " << $8 << endl;
+                        std::cout << "[]= " << $1 << ", "<< $3 << ", " << temp;
+                        }
+                        SEMICOLON {std::cout << endl;} Statement1 
+                | IDENT L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET ASSIGN NUMBER {
+                        std::cout << "[]= " << $1 << ", "<< $3 << ", " << $6;
+                        }
+            SEMICOLON {std::cout << endl;} Statement1 
+                | IDENT L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET ASSIGN IDENT L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET MULT 
+                        L_PAREN IDENT L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET ADD Var R_PAREN {
+                        std::string temp1 = "temp_" + to_string(k);
+                        k++;
+                        std::cout << ". " << temp1 << endl;
+                        std::cout << "=[] " << temp1 << ", " << $6 << ", " << $8 << endl;
+                        std::string temp2 = "temp_" + to_string(k);
+                        k++;
+                        std::cout << ". " << temp2 << endl;
+                        std::cout << "=[] " << temp2 << ", " << $12 << ", " << $14 << endl;
+                        std::string temp3 = "temp_" + to_string(k);
+                        k++;
+                        std::cout << ". " << temp3 << endl;
+                        std::cout << "+ "<< temp3 << ", " << temp2 << ", " << $17 << endl;
+                        std::string temp4 = "temp_" + to_string(k);
+                        k++;
+                        std::cout << ". " << temp4 << endl;
+                        std::cout << "* "<< temp4 << ", " << temp1 << ", " << temp3 << endl;
+                        std::cout << "[]= " << $1 << ", "<< $3 << ", " << temp4;
+                        }
+                        SEMICOLON {std::cout << endl;} Statement1 
             | IF Bool_Exp THEN Statement Else_statement ENDIF SEMICOLON Statement1
             | WHILE Bool_Exp BEGINLOOP Statement ENDLOOP SEMICOLON Statement1
             | DO BEGINLOOP Statement ENDLOOP WHILE Bool_Exp SEMICOLON Statement1
             | READ Var {std::cout << ".< " << $2;} SEMICOLON {std::cout << endl;} Statement1
             | WRITE Var {std::cout << ".> " << $2;} SEMICOLON {std::cout << endl;} Statement1
-            | READ Var_arr SEMICOLON {std::cout << endl;} Statement1
-            | WRITE Var_arr SEMICOLON {std::cout << endl;} Statement1
+            | READ IDENT L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET {
+                        std::string temp = "temp_" + to_string(k);
+                        k++;
+                        std::cout << ". " << temp << endl;
+                        std::cout << "[]= " << temp << ", "<< $2 << ", " << $4 << endl;
+                        std::cout << ".< " << $2;
+                        } 
+                        SEMICOLON {std::cout << endl;} Statement1
+            | WRITE IDENT L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET {                        
+                        std::string temp = "temp_" + to_string(k);
+                        k++;
+                        std::cout << ". " << temp << endl;
+                        std::cout << "=[] " << temp << ", "<< $2 << ", " << $4 << endl;
+                        std::cout << ".> " << temp;
+                        } 
+                        SEMICOLON {std::cout << endl;} Statement1
             | CONTINUE SEMICOLON {std::cout << endl;} Statement1
             | BREAK SEMICOLON {std::cout << endl;} Statement1
             | RETURN Expression SEMICOLON {org_return_exp(); std::cout << endl;} Statement1
@@ -265,6 +315,7 @@ Var_arr:    IDENT L_SQUARE_BRACKET Expression R_SQUARE_BRACKET {
 
 
                 }
+
 
 ;
 

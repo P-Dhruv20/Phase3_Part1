@@ -41,3 +41,17 @@ call mult, temp_4
 .> d
 endfunc
 
+symbol table:
+--------------------
+function: add
+  locals: a
+  locals: b
+function: mult
+  locals: a
+  locals: b
+function: main
+  locals: a
+  locals: b
+  locals: c
+  locals: d
+--------------------
