@@ -133,7 +133,7 @@ Declaration:    IDENT COLON Array INTEGER {
         params.push_back(value);
         }
 }
-
+;
 Array:  ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF
         {$$ = $3;}
         | {
