@@ -78,6 +78,7 @@
 %type <stval> Add_Op
 %type <stval> Mult_Expr
 %type <stval> Expression
+%type <stval> Array
 %start Program
 
 %% 
@@ -99,14 +100,32 @@ Dec_colon:  Declaration SEMICOLON Dec_colon
 ;
 Declaration:    IDENT COLON Array INTEGER {
         std::string value = $1;
+        std::string num = $3;
+
         Type t = Integer;
-        std:: cout << ". " + value << endl;
+        std:: cout << ".";
+
+        if (num != "") {
+                std::cout << "[] "; 
+        }
+        else {
+                std::cout << " ";
+        }
+
+        std::cout << value;
+        if (num != "") {
+                std::cout << ", " << num; 
+        }
+
+        std::cout << endl;
+
         add_variable_to_symbol_table(value, t);
         params.push_back(value);
 }
-;
+
 Array:  ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF
-        | 
+        {$$ = $3;}
+        | {$$ = "";}
 ;
 Statement:  Var {operands.push_back($1); args.push_back($1);
                 }
@@ -170,7 +189,7 @@ Mult_Op:    MULT
             | 
 ;
 Term:   Var {operands.push_back($1); args.push_back($1);}
-        | NUMBER  {operands.push_back($1); args.push_back($1);}
+        | NUMBER  {operands.push_back($1); args.push_back($1); $$ = $1;}
         | L_PAREN {operands.push_back("(");} Expression {organize_into_nodes();} R_PAREN 
         | IDENT L_PAREN Term_Exp R_PAREN {args.push_back($1); org_args();}
 ;
