@@ -87,6 +87,12 @@ Program:    Function Program
 ;
 Function:   FUNCTION IDENT {
   std::string func_name = $2;
+                if(symbol_table.size() > 0 && findFunction(func_name)) {
+                        std::string msg = "Function already exists";
+                        char a[msg.size()];
+                        strcpy(a, msg.c_str());
+                        yyerror(a);
+                }
   std::cout << "func " + func_name << endl;
   add_function_to_symbol_table(func_name);
 }
@@ -202,12 +208,13 @@ Term:   Var {operands.push_back($1); args.push_back($1); arr.push_back($1);}
         | L_PAREN {operands.push_back("("); arr.push_back("(");} Expression {organize_into_nodes(); } R_PAREN 
         | IDENT L_PAREN Term_Exp R_PAREN {                
                 std::string val = $1;
-                if(find(val)) {args.push_back($1); org_args();}
-                else {  std::string msg = "Unidentified identifier";
-	        char a[msg.size()];
-		strcpy(a, msg.c_str());
-                yyerror(a);
+                if(!findFunction(val)) {
+                        std::string msg = "Unidentified function";
+	                char a[msg.size()];
+		        strcpy(a, msg.c_str());
+                        yyerror(a);
                 }
+                args.push_back($1); org_args();
         }
 ;
 Term_Exp:   Expression
@@ -216,8 +223,19 @@ Term_Exp:   Expression
 ;
 Var:    IDENT {  
         std::string val = $1;
-        if(find(val)) {$$ = $1;}
-        else {  std::string msg = "Unidentified identifier";
+        if(find(val)) {
+                if (!isArray(val)) { 
+                                $$ = $1; 
+                        }
+                        else {
+                                std::string msg = "Identifier is not an integer type";
+                                char a[msg.size()];
+                                strcpy(a, msg.c_str());
+                                yyerror(a);
+                        }
+        }
+        else {  
+                std::string msg = "Unidentified identifier";
 	        char a[msg.size()];
 		strcpy(a, msg.c_str());
                 yyerror(a);
@@ -226,13 +244,28 @@ Var:    IDENT {
 ;
 Var_arr:    IDENT L_SQUARE_BRACKET Expression R_SQUARE_BRACKET {        
                 std::string val = $1;
-                if(find(val)) {$$ = $1; org_array();}
-                else {  std::string msg = "Unidentified identifier";
-	        char a[msg.size()];
-		strcpy(a, msg.c_str());
-                yyerror(a);
+                if(find(val)) {
+                        if (isArray(val)) { 
+                                $$ = $1; 
+                                org_array();
+                        }
+                        else {
+                                std::string msg = "Identifier is not an array type";
+                                char a[msg.size()];
+                                strcpy(a, msg.c_str());
+                                yyerror(a);
+                        }
                 }
+                else {  
+                        std::string msg = "Unidentified identifier";
+                        char a[msg.size()];
+                        strcpy(a, msg.c_str());
+                        yyerror(a);
                 }
+
+
+                }
+
 ;
 
 %% 
@@ -241,7 +274,8 @@ int main(int argc, char **argv) {
    yyin = stdin;
    yyparse();
    std::string val = "main"; 
-   if(!find(val)){ std::string msg = "Not defined main";
+   if(!findFunction(val)){
+           std::string msg = "Not defined main";
 	        char a[msg.size()];
 		strcpy(a, msg.c_str());
                 yyerror(a);

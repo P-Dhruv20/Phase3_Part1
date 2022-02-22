@@ -508,14 +508,14 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    85,    85,    86,    88,    93,    93,    88,    98,    99,
-     101,   131,   133,   135,   137,   135,   138,   138,   138,   139,
-     140,   141,   142,   142,   142,   143,   143,   143,   144,   144,
-     145,   145,   146,   146,   147,   147,   148,   148,   150,   151,
-     153,   154,   156,   158,   159,   161,   162,   163,   164,   165,
-     166,   167,   169,   172,   171,   176,   175,   179,   182,   186,
-     185,   190,   189,   194,   193,   197,   199,   200,   201,   202,
-     202,   202,   203,   213,   214,   214,   215,   217,   227
+       0,    85,    85,    86,    88,    99,    99,    88,   104,   105,
+     107,   137,   139,   141,   143,   141,   144,   144,   144,   145,
+     146,   147,   148,   148,   148,   149,   149,   149,   150,   150,
+     151,   151,   152,   152,   153,   153,   154,   154,   156,   157,
+     159,   160,   162,   164,   165,   167,   168,   169,   170,   171,
+     172,   173,   175,   178,   177,   182,   181,   185,   188,   192,
+     191,   196,   195,   200,   199,   203,   205,   206,   207,   208,
+     208,   208,   209,   220,   221,   221,   222,   224,   245
 };
 #endif
 
@@ -1486,34 +1486,40 @@ yyreduce:
 #line 88 "miniL.y" /* yacc.c:1646  */
     {
   std::string func_name = (yyvsp[0].stval);
+                if(symbol_table.size() > 0 && findFunction(func_name)) {
+                        std::string msg = "Function already exists";
+                        char a[msg.size()];
+                        strcpy(a, msg.c_str());
+                        yyerror(a);
+                }
   std::cout << "func " + func_name << endl;
   add_function_to_symbol_table(func_name);
 }
-#line 1493 "y.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 5:
-#line 93 "miniL.y" /* yacc.c:1646  */
-    {org_params();}
 #line 1499 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 6:
-#line 93 "miniL.y" /* yacc.c:1646  */
-    {params.clear();}
+  case 5:
+#line 99 "miniL.y" /* yacc.c:1646  */
+    {org_params();}
 #line 1505 "y.tab.c" /* yacc.c:1646  */
     break;
 
+  case 6:
+#line 99 "miniL.y" /* yacc.c:1646  */
+    {params.clear();}
+#line 1511 "y.tab.c" /* yacc.c:1646  */
+    break;
+
   case 7:
-#line 94 "miniL.y" /* yacc.c:1646  */
+#line 100 "miniL.y" /* yacc.c:1646  */
     {
   std::cout << "endfunc" << endl << endl;
 }
-#line 1513 "y.tab.c" /* yacc.c:1646  */
+#line 1519 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 101 "miniL.y" /* yacc.c:1646  */
+#line 107 "miniL.y" /* yacc.c:1646  */
     {
         std::string value = (yyvsp[-3].stval);
         std::string num = (yyvsp[-1].stval);
@@ -1543,233 +1549,259 @@ yyreduce:
         params.push_back(value);
         }
 }
-#line 1547 "y.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 11:
-#line 132 "miniL.y" /* yacc.c:1646  */
-    {(yyval.stval) = (yyvsp[-2].stval);}
 #line 1553 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 12:
-#line 133 "miniL.y" /* yacc.c:1646  */
-    {(yyval.stval) = "";}
+  case 11:
+#line 138 "miniL.y" /* yacc.c:1646  */
+    {(yyval.stval) = (yyvsp[-2].stval);}
 #line 1559 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 13:
-#line 135 "miniL.y" /* yacc.c:1646  */
-    {operands.push_back((yyvsp[0].stval)); args.push_back((yyvsp[0].stval)); arr.push_back((yyvsp[0].stval));
-                }
-#line 1566 "y.tab.c" /* yacc.c:1646  */
+  case 12:
+#line 139 "miniL.y" /* yacc.c:1646  */
+    {(yyval.stval) = "";}
+#line 1565 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 14:
-#line 137 "miniL.y" /* yacc.c:1646  */
-    {if (operands.size() > 0) {organize_into_nodes();} }
+  case 13:
+#line 141 "miniL.y" /* yacc.c:1646  */
+    {operands.push_back((yyvsp[0].stval)); args.push_back((yyvsp[0].stval)); arr.push_back((yyvsp[0].stval));
+                }
 #line 1572 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 16:
-#line 138 "miniL.y" /* yacc.c:1646  */
-    { arr.push_back((yyvsp[0].stval));}
+  case 14:
+#line 143 "miniL.y" /* yacc.c:1646  */
+    {if (operands.size() > 0) {organize_into_nodes();} }
 #line 1578 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 17:
-#line 138 "miniL.y" /* yacc.c:1646  */
-    {if (arr.size() > 0) {org_array();} }
+  case 16:
+#line 144 "miniL.y" /* yacc.c:1646  */
+    { arr.push_back((yyvsp[0].stval));}
 #line 1584 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 22:
-#line 142 "miniL.y" /* yacc.c:1646  */
-    {std::cout << ".< " << (yyvsp[0].stval);}
+  case 17:
+#line 144 "miniL.y" /* yacc.c:1646  */
+    {if (arr.size() > 0) {org_array();} }
 #line 1590 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 23:
-#line 142 "miniL.y" /* yacc.c:1646  */
-    {std::cout << endl;}
+  case 22:
+#line 148 "miniL.y" /* yacc.c:1646  */
+    {std::cout << ".< " << (yyvsp[0].stval);}
 #line 1596 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 25:
-#line 143 "miniL.y" /* yacc.c:1646  */
-    {std::cout << ".> " << (yyvsp[0].stval);}
+  case 23:
+#line 148 "miniL.y" /* yacc.c:1646  */
+    {std::cout << endl;}
 #line 1602 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 26:
-#line 143 "miniL.y" /* yacc.c:1646  */
-    {std::cout << endl;}
+  case 25:
+#line 149 "miniL.y" /* yacc.c:1646  */
+    {std::cout << ".> " << (yyvsp[0].stval);}
 #line 1608 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 28:
-#line 144 "miniL.y" /* yacc.c:1646  */
+  case 26:
+#line 149 "miniL.y" /* yacc.c:1646  */
     {std::cout << endl;}
 #line 1614 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 30:
-#line 145 "miniL.y" /* yacc.c:1646  */
+  case 28:
+#line 150 "miniL.y" /* yacc.c:1646  */
     {std::cout << endl;}
 #line 1620 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 32:
-#line 146 "miniL.y" /* yacc.c:1646  */
+  case 30:
+#line 151 "miniL.y" /* yacc.c:1646  */
     {std::cout << endl;}
 #line 1626 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 34:
-#line 147 "miniL.y" /* yacc.c:1646  */
+  case 32:
+#line 152 "miniL.y" /* yacc.c:1646  */
     {std::cout << endl;}
 #line 1632 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 36:
-#line 148 "miniL.y" /* yacc.c:1646  */
-    {org_return_exp(); std::cout << endl;}
+  case 34:
+#line 153 "miniL.y" /* yacc.c:1646  */
+    {std::cout << endl;}
 #line 1638 "y.tab.c" /* yacc.c:1646  */
     break;
 
+  case 36:
+#line 154 "miniL.y" /* yacc.c:1646  */
+    {org_return_exp(); std::cout << endl;}
+#line 1644 "y.tab.c" /* yacc.c:1646  */
+    break;
+
   case 53:
-#line 172 "miniL.y" /* yacc.c:1646  */
+#line 178 "miniL.y" /* yacc.c:1646  */
     { operands.push_back("+"); args.push_back("+"); arr.push_back("+");
         }
-#line 1645 "y.tab.c" /* yacc.c:1646  */
+#line 1651 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 55:
-#line 176 "miniL.y" /* yacc.c:1646  */
+#line 182 "miniL.y" /* yacc.c:1646  */
     { operands.push_back("-"); args.push_back("-"); arr.push_back("-");
         }
-#line 1652 "y.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 57:
-#line 179 "miniL.y" /* yacc.c:1646  */
-    {}
 #line 1658 "y.tab.c" /* yacc.c:1646  */
     break;
 
+  case 57:
+#line 185 "miniL.y" /* yacc.c:1646  */
+    {}
+#line 1664 "y.tab.c" /* yacc.c:1646  */
+    break;
+
   case 59:
-#line 186 "miniL.y" /* yacc.c:1646  */
+#line 192 "miniL.y" /* yacc.c:1646  */
     { operands.push_back("*"); args.push_back("*"); arr.push_back("*");
         }
-#line 1665 "y.tab.c" /* yacc.c:1646  */
+#line 1671 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 61:
-#line 190 "miniL.y" /* yacc.c:1646  */
+#line 196 "miniL.y" /* yacc.c:1646  */
     { operands.push_back("/"); args.push_back("/"); arr.push_back("/");
         }
-#line 1672 "y.tab.c" /* yacc.c:1646  */
+#line 1678 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 63:
-#line 194 "miniL.y" /* yacc.c:1646  */
+#line 200 "miniL.y" /* yacc.c:1646  */
     { operands.push_back("%"); args.push_back("%"); arr.push_back("%");
         }
-#line 1679 "y.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 65:
-#line 197 "miniL.y" /* yacc.c:1646  */
-    {}
 #line 1685 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 66:
-#line 199 "miniL.y" /* yacc.c:1646  */
-    {operands.push_back((yyvsp[0].stval)); args.push_back((yyvsp[0].stval)); arr.push_back((yyvsp[0].stval));}
+  case 65:
+#line 203 "miniL.y" /* yacc.c:1646  */
+    {}
 #line 1691 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 67:
-#line 200 "miniL.y" /* yacc.c:1646  */
-    {arr.push_back((yyvsp[0].stval));}
+  case 66:
+#line 205 "miniL.y" /* yacc.c:1646  */
+    {operands.push_back((yyvsp[0].stval)); args.push_back((yyvsp[0].stval)); arr.push_back((yyvsp[0].stval));}
 #line 1697 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 68:
-#line 201 "miniL.y" /* yacc.c:1646  */
-    {operands.push_back((yyvsp[0].stval)); args.push_back((yyvsp[0].stval)); (yyval.stval) = (yyvsp[0].stval); arr.push_back((yyvsp[0].stval));}
+  case 67:
+#line 206 "miniL.y" /* yacc.c:1646  */
+    {arr.push_back((yyvsp[0].stval));}
 #line 1703 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 69:
-#line 202 "miniL.y" /* yacc.c:1646  */
-    {operands.push_back("("); arr.push_back("(");}
+  case 68:
+#line 207 "miniL.y" /* yacc.c:1646  */
+    {operands.push_back((yyvsp[0].stval)); args.push_back((yyvsp[0].stval)); (yyval.stval) = (yyvsp[0].stval); arr.push_back((yyvsp[0].stval));}
 #line 1709 "y.tab.c" /* yacc.c:1646  */
     break;
 
-  case 70:
-#line 202 "miniL.y" /* yacc.c:1646  */
-    {organize_into_nodes(); }
+  case 69:
+#line 208 "miniL.y" /* yacc.c:1646  */
+    {operands.push_back("("); arr.push_back("(");}
 #line 1715 "y.tab.c" /* yacc.c:1646  */
     break;
 
+  case 70:
+#line 208 "miniL.y" /* yacc.c:1646  */
+    {organize_into_nodes(); }
+#line 1721 "y.tab.c" /* yacc.c:1646  */
+    break;
+
   case 72:
-#line 203 "miniL.y" /* yacc.c:1646  */
+#line 209 "miniL.y" /* yacc.c:1646  */
     {                
                 std::string val = (yyvsp[-3].stval);
-                if(find(val)) {args.push_back((yyvsp[-3].stval)); org_args();}
-                else {  std::string msg = "Unidentified identifier";
-	        char a[msg.size()];
-		strcpy(a, msg.c_str());
-                yyerror(a);
+                if(!findFunction(val)) {
+                        std::string msg = "Unidentified function";
+	                char a[msg.size()];
+		        strcpy(a, msg.c_str());
+                        yyerror(a);
                 }
+                args.push_back((yyvsp[-3].stval)); org_args();
         }
-#line 1729 "y.tab.c" /* yacc.c:1646  */
+#line 1736 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 74:
-#line 214 "miniL.y" /* yacc.c:1646  */
+#line 221 "miniL.y" /* yacc.c:1646  */
     {args.push_back(",");}
-#line 1735 "y.tab.c" /* yacc.c:1646  */
+#line 1742 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 76:
-#line 215 "miniL.y" /* yacc.c:1646  */
+#line 222 "miniL.y" /* yacc.c:1646  */
     {}
-#line 1741 "y.tab.c" /* yacc.c:1646  */
+#line 1748 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 77:
-#line 217 "miniL.y" /* yacc.c:1646  */
+#line 224 "miniL.y" /* yacc.c:1646  */
     {  
         std::string val = (yyvsp[0].stval);
-        if(find(val)) {(yyval.stval) = (yyvsp[0].stval);}
-        else {  std::string msg = "Unidentified identifier";
+        if(find(val)) {
+                if (!isArray(val)) { 
+                                (yyval.stval) = (yyvsp[0].stval); 
+                        }
+                        else {
+                                std::string msg = "Identifier is not an integer type";
+                                char a[msg.size()];
+                                strcpy(a, msg.c_str());
+                                yyerror(a);
+                        }
+        }
+        else {  
+                std::string msg = "Unidentified identifier";
 	        char a[msg.size()];
 		strcpy(a, msg.c_str());
                 yyerror(a);
                 }
         }
-#line 1755 "y.tab.c" /* yacc.c:1646  */
+#line 1773 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 78:
-#line 227 "miniL.y" /* yacc.c:1646  */
+#line 245 "miniL.y" /* yacc.c:1646  */
     {        
                 std::string val = (yyvsp[-3].stval);
-                if(find(val)) {(yyval.stval) = (yyvsp[-3].stval); org_array();}
-                else {  std::string msg = "Unidentified identifier";
-	        char a[msg.size()];
-		strcpy(a, msg.c_str());
-                yyerror(a);
+                if(find(val)) {
+                        if (isArray(val)) { 
+                                (yyval.stval) = (yyvsp[-3].stval); 
+                                org_array();
+                        }
+                        else {
+                                std::string msg = "Identifier is not an array type";
+                                char a[msg.size()];
+                                strcpy(a, msg.c_str());
+                                yyerror(a);
+                        }
                 }
+                else {  
+                        std::string msg = "Unidentified identifier";
+                        char a[msg.size()];
+                        strcpy(a, msg.c_str());
+                        yyerror(a);
                 }
-#line 1769 "y.tab.c" /* yacc.c:1646  */
+
+
+                }
+#line 1801 "y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1773 "y.tab.c" /* yacc.c:1646  */
+#line 1805 "y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2004,14 +2036,15 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 238 "miniL.y" /* yacc.c:1906  */
+#line 271 "miniL.y" /* yacc.c:1906  */
  
 
 int main(int argc, char **argv) {
    yyin = stdin;
    yyparse();
    std::string val = "main"; 
-   if(!find(val)){ std::string msg = "Not defined main";
+   if(!findFunction(val)){
+           std::string msg = "Not defined main";
 	        char a[msg.size()];
 		strcpy(a, msg.c_str());
                 yyerror(a);

@@ -335,6 +335,29 @@ bool find(std::string &value) {
   return false;
 }
 
+bool findFunction(std::string &value) {
+  for(int i=0; i < symbol_table.size(); i++) {
+    Function func = symbol_table[i];
+    if (func.name == value) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool isArray(std::string &value) {
+  Function *f = get_function();
+  for(int i=0; i < f->declarations.size(); i++) {
+    Symbol *s = &f->declarations[i];
+    if (s->name == value) {
+      if (s->type == Array) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 void add_function_to_symbol_table(std::string &value) {
   Function f; 
   f.name = value; 
